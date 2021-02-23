@@ -1,2 +1,1 @@
-# Hello
 # dl-project
