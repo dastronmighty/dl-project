@@ -1,5 +1,7 @@
-import torchvision
 import torch
+import torchvision
+from numpy import asarray
+from PIL import Image
 
 from torch.utils.data import Dataset
 
@@ -11,7 +13,8 @@ class CustomDataset(Dataset):
 
     def preprocess(self, file):
         Y = int(file[-5:-4])
-        img = torchvision.io.read_image(self.base +"/"+file)
+        img = torchvision.io.read_image(self.base+"/"+file)
+        img = torchvision.transforms.functional.rgb_to_grayscale(img)
         img = img/255
         X = img.float()
         return X, Y
@@ -21,6 +24,7 @@ class CustomDataset(Dataset):
 
     def __getitem__(self, index):
         return self.preprocess(self.files[index])
+
 
 class WrappedDataLoader:
     def __init__(self, dl, func):

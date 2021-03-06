@@ -11,7 +11,7 @@ import pandas as pd
 from tqdm import tqdm
 
 class Preproccessor:
-    def __init__(self, data_path, from_, to_, MAX_SIZE=512, verbose=False):
+    def __init__(self, data_path, output_path, from_, to_, MAX_SIZE=512, verbose=False):
         if data_path is None:
             raise RuntimeError("No path to data directory given")
         data_dir = f"{data_path}/ODIR-5K/ODIR-5K/Training Images"
@@ -25,7 +25,7 @@ class Preproccessor:
         data_df["path"] = data_df["filename"].apply(lambda x: f"{data_dir}/{x}")
         data_df = data_df[["N","path"]]
 
-        base = "preprocessed_data_images"
+        base = f"{output_path}/preprocessed_data_images"
 
         if not os.path.isdir(base):
             os.mkdir(base)

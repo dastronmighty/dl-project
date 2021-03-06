@@ -14,7 +14,7 @@ def main():
 
     data = Data(DATA_PATH,
                 workers=0,
-                dev=dev,
+                device=dev,
                 batch_size=128)
 
     print("Creating Training Figure")
