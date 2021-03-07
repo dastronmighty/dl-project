@@ -25,7 +25,6 @@ class CustomDataset(Dataset):
     def __getitem__(self, index):
         return self.preprocess(self.files[index])
 
-
 class WrappedDataLoader:
     def __init__(self, dl, func):
         self.dl = dl
