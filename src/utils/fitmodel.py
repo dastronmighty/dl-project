@@ -25,7 +25,8 @@ class FitModel:
 
         self.loss_func = loss_func
 
-        model.to(dev)
+        model = model.to(dev)
+
         self.logger = logger
         self.verbose = verbose
 
