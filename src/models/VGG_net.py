@@ -3,20 +3,21 @@ from torch import nn
 
 class VGG_net(nn.Module):
 
-    def __init__(self, in_channels=3, output_size=2, architecture=None):
+    def __init__(self, in_channels=3, output_size=1, architecture=11):
         super(VGG_net, self).__init__()
         self.in_channels = in_channels
-        VGG16 = [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "m"]
+        VGG16 = [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"]
+        VGG11 = [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"]
 
-        arch = architecture
-        if arch is None:
+        arch = VGG11
+        if architecture == 16:
             arch = VGG16
         self.conv_layers = self.create_conv_layers(arch)
 
         self.flat = nn.Flatten()
 
         self.dense = nn.Sequential(
-            nn.Linear(100352, 4096),
+            nn.Linear(25088, 4096),
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.Linear(4096, 4096),

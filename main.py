@@ -1,19 +1,21 @@
-from src.models.BasicCNN import Basic_CNN
+from src.models.BatchNormCNN import BatchNormCNN
+from src.models.VGG_net import VGG_net
 from src.utils.ParamTuner import ParamTuner
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 
 import torch
 
-DATA_PATH = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
+DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
 CKP_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints"
 LOG_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
 
 def main():
-    NAME = f"BASIC_CNN_TEST1"
-    DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    EPOCHS = 50
-    WORKERS = 4
+    NAME = f"VGGTEST1"
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using Device {DEVICE}")
+    EPOCHS = 15
+    WORKERS = 0
     SAVE_EVERY = 10
     metrics_dict = {
         "auc": auc,
@@ -22,31 +24,30 @@ def main():
         "low_fpr_thresh": lowest_fpr_thresh
     }
 
-    lrs = [0.001, 0.0025, 0.008,
-           0.0001, 0.00025, 0.0008,
-           0.00001, 0.000025, 0.00008,
-           0.000001, 0.0000025, 0.000008]
-    bss = [32, 64, 128]
-    opts = [torch.optim.SGD, torch.optim.RMSprop, torch.optim.Adam]
-    losses = [torch.nn.BCELoss, torch.nn.MSELoss]
+    lrs = [0.00025]
+    bss = [32]
+    opts = [torch.optim.Adam]
+    losses = [torch.nn.BCELoss]
+
     ParamTuner(NAME,
-                   Basic_CNN,
-                   metrics_dict,
-                   "auc",
-                   DATA_PATH,
-                   LOG_DIR,
-                   CKP_DIR,
-                   test_amt=0.15,
-                   val_amt=0.15,
-                   learning_rates=lrs,
-                   batch_sizes=bss,
-                   optimisers=opts,
-                   losses=losses,
-                   EPOCHS=EPOCHS,
-                   WORKERS=WORKERS,
-                   SAVE_EVERY=SAVE_EVERY,
-                   DEVICE=DEVICE,
-                   verbose=True)
+                BatchNormCNN,
+                metrics_dict,
+                "auc",
+                DATA_DIR,
+                LOG_DIR,
+                CKP_DIR,
+                test_amt=0.15,
+                val_amt=0.15,
+                learning_rates=lrs,
+                batch_sizes=bss,
+                optimisers=opts,
+                losses=losses,
+                EPOCHS=EPOCHS,
+                WORKERS=WORKERS,
+                SAVE_EVERY=SAVE_EVERY,
+                DEVICE=DEVICE,
+                verbose=True,
+                overwrite=True)
 
 
 if __name__ == '__main__':

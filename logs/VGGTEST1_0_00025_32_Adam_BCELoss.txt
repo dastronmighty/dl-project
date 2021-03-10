@@ -1,0 +1,1 @@
+epoch : 0 - Train Loss : 33.08757818799875 - Avg. Train Loss : 33.08757818799875 - Test Loss : 32.045929018789145 - Avg. Test Loss : 32.045929018789145 - Train auc : 0.5 - Test auc : 0.5 - Train acc : 0.6690688775510204 - Test acc : 0.6793750000000001 - Train top_tpr_thresh : 0.0 - Test top_tpr_thresh : 0.0 - Train low_fpr_thresh : 1.0 - Test low_fpr_thresh : 1.0
