@@ -1,9 +1,14 @@
 import torch
 import torchvision
-from numpy import asarray
-from PIL import Image
+import numpy as np
+import random
 
 from torch.utils.data import Dataset
+
+def seed_worker(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
 
 class CustomDataset(Dataset):
     def __init__(self, base, files, dev):
@@ -14,7 +19,6 @@ class CustomDataset(Dataset):
     def preprocess(self, file):
         Y = int(file[-5:-4])
         img = torchvision.io.read_image(self.base+"/"+file)
-        img = torchvision.transforms.functional.rgb_to_grayscale(img)
         img = img/255
         X = img.float()
         return X, Y

@@ -3,6 +3,9 @@ from src.utils.Logger import Logger
 from src.utils.Checkpoint import Checkpoint
 from src.utils.fitmodel import FitModel
 
+import random
+import numpy as np
+
 import torch
 
 class ParamTuner:
@@ -25,7 +28,14 @@ class ParamTuner:
                  EPOCHS=20,
                  DEVICE='cpu',
                  WORKERS=0,
-                 verbose=False):
+                 verbose=False,
+                 overwrite=False,
+                 seed=42):
+        torch.manual_seed(seed)
+        random.seed(seed)
+        np.random.seed(seed)
+
+        self.seed = seed
 
         self.name = Name
         self.model_class = model_class
@@ -33,6 +43,7 @@ class ParamTuner:
         self.device = DEVICE
         self.workers = WORKERS
         self.verbose = verbose
+        self.overwrite = overwrite
         self.save_every = SAVE_EVERY
 
         self.metrics_to_use = metrics_to_use
@@ -87,7 +98,8 @@ class ParamTuner:
 
         checkpointer = Checkpoint(NAME,
                                   self.CKP_DIR,
-                                  self.save_every)
+                                  self.save_every,
+                                  overwrite=self.overwrite)
 
         FitModel(model,
                  data,
@@ -97,10 +109,9 @@ class ParamTuner:
                  self.device,
                  logger,
                  checkpointer,
-                 verbose=self.verbose)
+                 verbose=self.verbose,
+                 seed=self.seed)
 
         met_final = logger.test_history[self.metric_to_optimise][-1]
 
         return NAME, met_final
-
-

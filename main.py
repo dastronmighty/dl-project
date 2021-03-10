@@ -28,7 +28,7 @@ def main():
            0.000001, 0.0000025, 0.000008]
     bss = [32, 64, 128]
     opts = [torch.optim.SGD, torch.optim.RMSprop, torch.optim.Adam]
-    lsss = [torch.nn.BCELoss, torch.nn.MSELoss]
+    losses = [torch.nn.BCELoss, torch.nn.MSELoss]
     ParamTuner(NAME,
                    Basic_CNN,
                    metrics_dict,
@@ -41,7 +41,7 @@ def main():
                    learning_rates=lrs,
                    batch_sizes=bss,
                    optimisers=opts,
-                   losses=lsss,
+                   losses=losses,
                    EPOCHS=EPOCHS,
                    WORKERS=WORKERS,
                    SAVE_EVERY=SAVE_EVERY,

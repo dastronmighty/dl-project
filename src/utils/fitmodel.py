@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
-
 import torch
+import random
 
 
 class FitModel:
@@ -15,8 +15,11 @@ class FitModel:
                  dev,
                  logger,
                  checkpointer,
-                 verbose=False):
-
+                 verbose=False,
+                 seed=42):
+        torch.manual_seed(seed)
+        random.seed(seed)
+        np.random.seed(seed)
         self.train_dl = data.get_train_data()
         self.val_dl = data.get_val_data()
 
@@ -38,7 +41,7 @@ class FitModel:
     def train_model(self, epoch, model, opt):
         model.train()
         losses, nums = [], []
-        for xb, yb in tqdm(self.train_dl, "batch", disable=(not self.verbose)):
+        for xb, yb in tqdm(self.train_dl, "training batch", disable=(not self.verbose)):
             loss, n = self.loss_batch(epoch, model, xb, yb, opt)
             losses.append(loss)
             nums.append(n)
