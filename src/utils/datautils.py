@@ -2,6 +2,7 @@ import torch
 import torchvision
 import numpy as np
 import random
+import os
 
 from torch.utils.data import Dataset
 
@@ -10,7 +11,6 @@ def seed_worker(worker_id):
     worker_seed = torch.initial_seed() % 2**32
     np.random.seed(worker_seed)
     random.seed(worker_seed)
-
 
 class CustomDataset(Dataset):
     def __init__(self, base, files, dev):
@@ -48,3 +48,18 @@ class WrappedDataLoader:
 def mountToDevice(X, Y, dev):
     return X.to(dev), Y.to(dev)
 
+
+def get_jpgs_from_path(path):
+    imgs = []
+    for _ in os.listdir(path):
+        p = f"{path}/{_}"
+        if os.path.isdir(p):
+            dir_ims = get_jpgs_from_path(p)
+            imgs = imgs + dir_ims
+        if ".jpg" in p:
+            imgs.append(p)
+    return imgs
+
+
+def sample_from_data_loader(data_loader):
+    return next(iter(data_loader))

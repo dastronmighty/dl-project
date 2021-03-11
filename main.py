@@ -1,5 +1,4 @@
 from src.models.BatchNormCNN import BatchNormCNN
-from src.models.VGG_net import VGG_net
 from src.utils.ParamTuner import ParamTuner
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh

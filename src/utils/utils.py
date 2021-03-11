@@ -14,11 +14,12 @@ def tensorToLabels(Y):
 
 def show_dataset(X, Y):
     to_show, l = X[0:9], tensorToLabels(Y[0:9])
-    f, axs = plt.subplots(3, 3, figsize=(10, 10))
+    rows, cols = 3, 3
+    f, axs = plt.subplots(rows, cols, figsize=((5 * cols), (5 * rows)))
     for i, x in enumerate(to_show):
         im = ((x.permute(1, 2, 0))*255).int()
-        axs[i//3, i%3].imshow(im)
-        axs[i//3, i%3].set_title(l[i])
-        axs[i//3, i%3].axis('off')
+        idx1, idx2 = i // cols, i % cols
+        axs[idx1, idx2].imshow(im)
+        axs[idx1, idx2].set_title(i)
+        axs[idx1, idx2].axis('off')
     return f
-

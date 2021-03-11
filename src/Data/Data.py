@@ -1,7 +1,6 @@
-import os
-
+import random
 from torch.utils.data import DataLoader
-from src.utils.datautils import WrappedDataLoader, CustomDataset, mountToDevice, seed_worker
+from src.utils.datautils import WrappedDataLoader, CustomDataset, mountToDevice, seed_worker, get_jpgs_from_path
 
 class Data:
     def __init__(self, path,
@@ -10,20 +9,23 @@ class Data:
                  workers=0,
                  device='cpu',
                  batch_size=64,
-                 verbose=False):
-        self.d_path = path
+                 verbose=False,
+                 seed=42):
         self.dev = device
         self.batch_size = batch_size
         self.workers = workers
         self.verbose = verbose
 
-        files = os.listdir(path)
-        N = len(files)
+        paths = get_jpgs_from_path(path)
+        random.seed(seed)
+        random.shuffle(paths)
+
+        N = len(paths)
         v_amt, te_amt = int(N * val_amt), int(N * test_amt)
         tr_amt = N - v_amt - te_amt
-        self.train_files = files[0:tr_amt]
-        self.val_files = files[tr_amt:(tr_amt + v_amt)]
-        self.test_files = files[(tr_amt + v_amt):]
+        self.train_files = paths[0:tr_amt]
+        self.val_files = paths[tr_amt:(tr_amt + v_amt)]
+        self.test_files = paths[(tr_amt + v_amt):]
 
     def get_train_data(self):
         data = CustomDataset(self.d_path, self.train_files, self.dev)
