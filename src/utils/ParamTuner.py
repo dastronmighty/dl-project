@@ -18,6 +18,7 @@ class ParamTuner:
                  DATA_DIR,
                  LOG_DIR,
                  CKP_DIR,
+                 total_amt=3000,
                  val_percent=0.2,
                  test_amt=3000,
                  learning_rates=[0.001],
@@ -53,6 +54,7 @@ class ParamTuner:
         self.metrics_to_use = metrics_to_use
         self.metric_to_optimise = metric_to_optimise
 
+        self.total_amt = total_amt
         self.test_amt = test_amt
         self.val_percent = val_percent
 
@@ -87,6 +89,7 @@ class ParamTuner:
 
         data = Data(self.DATA_DIR,
                     batch_size=BATCH_SIZE,
+                    total_amt=self.total_amt,
                     val_percent=self.val_percent,
                     test_amt=self.test_amt,
                     wrapped_function=self.wrapped_function,

@@ -5,6 +5,7 @@ from src.utils.datautils import WrappedDataLoader, CustomDataset, mount_to_devic
 class Data:
     def __init__(self,
                  path,
+                 total_amt=3000,
                  val_percent=0.2,
                  test_amt=3000,
                  wrapped_function=None,
@@ -23,24 +24,44 @@ class Data:
             self.wrapped_function = lambda x, y: mount_to_device(*wrapped_function(x, y), self.dev)
 
         paths = get_jpgs_from_path(path)
+
+        regulars = [i for i in paths if "resized" in i]
+        for p in regulars:
+            paths.remove(p)
+
+        self.test_files = regulars[0:test_amt]
+        self.train_files = []
+        self.val_files = []
+
+        regulars = regulars[test_amt:]
+        reg_left = int(len(regulars)/2)
+
+        self.train_files += regulars[0:reg_left]
+        self.val_files += regulars[reg_left:]
+
         random.seed(seed)
         random.shuffle(paths)
-
+        total_amt = total_amt - len(regulars)
+        paths = paths[0:total_amt]
         self.N = len(paths)
 
-        self.test_files = []
-        for p in paths:
-            if len(self.test_files) >= test_amt:
-                break
-            if "resized" in p:
-                self.test_files.append(p)
-                paths.remove(p)
+        tr_amt = self.N - int(self.N * val_percent)
+        self.train_files += paths[0:tr_amt]
+        self.val_files += paths[tr_amt:]
 
-        vl_amt = int(self.N * val_percent)
-        tr_amt = self.N - vl_amt
+        if verbose:
+            for type in ["autocontrast", "equalize", "invert", "resized", "rotated"]:
+                ltr = len([i for i in self.train_files if type in i])
+                print(f"# of {type} in Train = {ltr}")
+                lv = len([i for i in self.val_files if type in i])
+                print(f"# of {type} in Validation = {lv}")
+                lte = len([i for i in self.test_files if type in i])
+                print(f"# of {type} in Test = {lte}")
+            print(f"Total size of Train = {len(self.train_files)}")
+            print(f"Total size of Validation = {len(self.val_files)}")
+            print(f"Total size of Test = {len(self.test_files)}")
 
-        self.train_files = paths[0:tr_amt]
-        self.val_files = paths[tr_amt:]
+
 
     def get_train_data(self):
         data = CustomDataset(self.train_files)
