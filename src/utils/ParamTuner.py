@@ -27,6 +27,7 @@ class ParamTuner:
                  SAVE_EVERY=10,
                  EPOCHS=20,
                  DEVICE='cpu',
+                 wrapped_function=None,
                  WORKERS=0,
                  verbose=False,
                  overwrite=False,
@@ -43,7 +44,9 @@ class ParamTuner:
         self.epochs = EPOCHS
         self.device = DEVICE
         self.workers = WORKERS
+        self.wrapped_function = wrapped_function
         self.verbose = verbose
+
         self.overwrite = overwrite
         self.save_every = SAVE_EVERY
 
@@ -86,6 +89,7 @@ class ParamTuner:
                     batch_size=BATCH_SIZE,
                     val_amt=self.val_amt,
                     test_amt=self.test_amt,
+                    wrapped_function=self.wrapped_function,
                     workers=self.workers,
                     device=self.device)
 

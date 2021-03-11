@@ -3,7 +3,6 @@ import torch
 import shutil
 from src.utils.utils import curr_time
 
-
 class Checkpoint:
 
     def __init__(self, name, PATH, save_every, overwrite=False):

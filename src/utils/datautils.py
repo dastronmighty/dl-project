@@ -20,7 +20,7 @@ class CustomDataset(Dataset):
 
     def preprocess(self, file):
         y = int(file[-5:-4])
-        img = torchvision.io.read_image(self.base+"/"+file)
+        img = torchvision.io.read_image(file)
         x = img.float()
         return x, y
 
@@ -44,8 +44,7 @@ class WrappedDataLoader:
         for b in batches:
             yield self.func(*b)
 
-
-def mountToDevice(X, Y, dev):
+def mount_to_device(X, Y, dev):
     return X.to(dev), Y.to(dev)
 
 
