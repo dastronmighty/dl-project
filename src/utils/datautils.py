@@ -12,10 +12,11 @@ def seed_worker(worker_id):
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
+
 class CustomDataset(Dataset):
-    def __init__(self, base, files, dev):
+
+    def __init__(self, files, dev):
         self.device = dev
-        self.base = base
         self.files = files
 
     def preprocess(self, file):
@@ -43,6 +44,7 @@ class WrappedDataLoader:
         batches = iter(self.dl)
         for b in batches:
             yield self.func(*b)
+
 
 def mount_to_device(X, Y, dev):
     return X.to(dev), Y.to(dev)

@@ -91,7 +91,8 @@ class ParamTuner:
                     test_amt=self.test_amt,
                     wrapped_function=self.wrapped_function,
                     workers=self.workers,
-                    device=self.device)
+                    device=self.device,
+                    seed=self.seed)
 
         logger = Logger(NAME,
                         self.LOG_DIR,
