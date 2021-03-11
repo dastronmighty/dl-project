@@ -15,8 +15,7 @@ def seed_worker(worker_id):
 
 class CustomDataset(Dataset):
 
-    def __init__(self, files, dev):
-        self.device = dev
+    def __init__(self, files):
         self.files = files
 
     def preprocess(self, file):
@@ -46,8 +45,8 @@ class WrappedDataLoader:
             yield self.func(*b)
 
 
-def mount_to_device(X, Y, dev):
-    return X.to(dev), Y.to(dev)
+def mount_to_device(x, y, dev):
+    return x.to(dev), y.to(dev)
 
 
 def get_jpgs_from_path(path):

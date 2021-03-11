@@ -13,10 +13,11 @@ DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosy
 CKP_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints"
 LOG_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
 
-def resize_wrapper(x, y, device):
+
+def resize_wrapper(x, y):
     x = transforms.functional.resize(x, size=(244, 244))
-    x, y = mount_to_device(x, y, device)
     return x, y
+
 
 def main():
     NAME = f"VGGTEST"

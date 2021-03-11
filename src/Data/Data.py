@@ -20,7 +20,7 @@ class Data:
 
         self.wrapped_function = mount_to_device
         if wrapped_function is not None:
-            self.wrapped_function = wrapped_function
+            self.wrapped_function = lambda x, y: mount_to_device(*wrapped_function(x, y), self.dev)
 
         paths = get_jpgs_from_path(path)
         random.seed(seed)
@@ -42,31 +42,29 @@ class Data:
         self.train_files = paths[0:tr_amt]
         self.val_files = paths[tr_amt:]
 
-
     def get_train_data(self):
-        data = CustomDataset(self.train_files, self.dev)
+        data = CustomDataset(self.train_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
                         shuffle=True,
                         num_workers=self.workers,
                         worker_init_fn=seed_worker)
-
-        return WrappedDataLoader(dl, lambda x, y: self.wrapped_function(x, y, self.dev))
+        return WrappedDataLoader(dl, self.wrapped_function)
 
     def get_val_data(self):
-        data = CustomDataset(self.val_files, self.dev)
+        data = CustomDataset(self.val_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
                         shuffle=True,
                         num_workers=self.workers,
                         worker_init_fn=seed_worker)
-        return WrappedDataLoader(dl, lambda x, y: self.wrapped_function(x, y, self.dev))
+        return WrappedDataLoader(dl, self.wrapped_function)
 
     def get_test_data(self):
-        data = CustomDataset(self.test_files, self.dev)
+        data = CustomDataset(self.test_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
                         shuffle=True,
                         num_workers=self.workers,
                         worker_init_fn=seed_worker)
-        return WrappedDataLoader(dl, lambda x, y: self.wrapped_function(x, y, self.dev))
+        return WrappedDataLoader(dl, self.wrapped_function)
