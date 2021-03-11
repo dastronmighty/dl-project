@@ -1,16 +1,25 @@
 from src.models.BatchNormCNN import BatchNormCNN
+from src.models.VGG_net import VGG_net
 from src.utils.ParamTuner import ParamTuner
+
+from src.utils.datautils import mount_to_device
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 
 import torch
+from torchvision import transforms
 
 DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/augmented"
 CKP_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints"
 LOG_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
 
+def resize_wrapper(x, y, device):
+    x = transforms.functional.resize(x, size=(244, 244))
+    x, y = mount_to_device(x, y, device)
+    return x, y
+
 def main():
-    NAME = f"BATCHNORMTESTSAUGMENT"
+    NAME = f"VGGTEST"
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using Device {DEVICE}")
     EPOCHS = 15
@@ -29,7 +38,7 @@ def main():
     losses = [torch.nn.BCELoss]
 
     ParamTuner(NAME,
-                BatchNormCNN,
+                VGG_net,
                 metrics_dict,
                 "auc",
                 DATA_DIR,
@@ -43,6 +52,7 @@ def main():
                 losses=losses,
                 EPOCHS=EPOCHS,
                 WORKERS=WORKERS,
+                wrapped_function=resize_wrapper,
                 SAVE_EVERY=SAVE_EVERY,
                 DEVICE=DEVICE,
                 verbose=True,

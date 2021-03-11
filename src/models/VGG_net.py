@@ -23,7 +23,8 @@ class VGG_net(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(4096, out_features=output_size)
+            nn.Linear(4096, out_features=output_size),
+            nn.Softmax()
         )
 
     def forward(self, xb):
