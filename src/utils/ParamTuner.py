@@ -95,6 +95,7 @@ class ParamTuner:
                     wrapped_function=self.wrapped_function,
                     workers=self.workers,
                     device=self.device,
+                    verbose=self.verbose,
                     seed=self.seed)
 
         logger = Logger(NAME,

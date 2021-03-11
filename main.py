@@ -18,7 +18,6 @@ def resize_wrapper(x, y):
     x = transforms.functional.resize(x, size=(244, 244))
     return x, y
 
-
 def main():
     NAME = f"VGGTEST"
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

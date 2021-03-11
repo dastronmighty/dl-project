@@ -3,6 +3,7 @@ import torch
 import shutil
 from src.utils.utils import curr_time
 
+
 class Checkpoint:
 
     def __init__(self, name, PATH, save_every, overwrite=False):
@@ -57,6 +58,7 @@ def load_ckp(checkpoint_path, model, opt=None, dev="cpu"):
 
     # return model, optimizer
     return model, opt
+
 
 def load_ckp(checkpoint_path, model, opt=None, dev="cpu"):
     # load check point
