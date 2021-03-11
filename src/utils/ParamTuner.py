@@ -18,8 +18,8 @@ class ParamTuner:
                  DATA_DIR,
                  LOG_DIR,
                  CKP_DIR,
-                 test_amt=0.15,
-                 val_amt=0.15,
+                 val_percent=0.2,
+                 test_amt=3000,
                  learning_rates=[0.001],
                  batch_sizes=[32],
                  optimisers=[torch.optim.SGD],
@@ -54,7 +54,7 @@ class ParamTuner:
         self.metric_to_optimise = metric_to_optimise
 
         self.test_amt = test_amt
-        self.val_amt = val_amt
+        self.val_percent = val_percent
 
         self.DATA_DIR = DATA_DIR
         self.LOG_DIR = LOG_DIR
@@ -68,8 +68,8 @@ class ParamTuner:
                         n, m = self.run_trial(lr, bs, optim, lf)
                         self.trials[n] = m
                         if self.verbose:
-                            print(self.trials)
-        print(self.trials)
+                            if self.verbose:
+                                print(self.trials)
 
     def run_trial(self, LR, BATCH_SIZE, OPTIM, LOSS):
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"
@@ -87,7 +87,7 @@ class ParamTuner:
 
         data = Data(self.DATA_DIR,
                     batch_size=BATCH_SIZE,
-                    val_amt=self.val_amt,
+                    val_percent=self.val_percent,
                     test_amt=self.test_amt,
                     wrapped_function=self.wrapped_function,
                     workers=self.workers,

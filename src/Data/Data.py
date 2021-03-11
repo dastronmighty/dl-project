@@ -5,8 +5,8 @@ from src.utils.datautils import WrappedDataLoader, CustomDataset, mount_to_devic
 class Data:
     def __init__(self,
                  path,
-                 val_amt=0.15,
-                 test_amt=0.15,
+                 val_percent=0.2,
+                 test_amt=3000,
                  wrapped_function=None,
                  workers=0,
                  device='cpu',
@@ -26,12 +26,22 @@ class Data:
         random.seed(seed)
         random.shuffle(paths)
 
-        N = len(paths)
-        v_amt, te_amt = int(N * val_amt), int(N * test_amt)
-        tr_amt = N - v_amt - te_amt
+        self.N = len(paths)
+
+        self.test_files = []
+        for p in paths:
+            if len(self.test_files) >= test_amt:
+                break
+            if "resized" in p:
+                self.test_files.append(p)
+                paths.remove(p)
+
+        vl_amt = int(self.N * val_percent)
+        tr_amt = self.N - vl_amt
+
         self.train_files = paths[0:tr_amt]
-        self.val_files = paths[tr_amt:(tr_amt + v_amt)]
-        self.test_files = paths[(tr_amt + v_amt):]
+        self.val_files = paths[tr_amt:]
+
 
     def get_train_data(self):
         data = CustomDataset(self.train_files, self.dev)

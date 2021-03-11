@@ -5,12 +5,12 @@ from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 
 import torch
 
-DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
+DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/augmented"
 CKP_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints"
 LOG_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
 
 def main():
-    NAME = f"VGGTEST1"
+    NAME = f"BATCHNORMTESTSAUGMENT"
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using Device {DEVICE}")
     EPOCHS = 15
@@ -35,8 +35,8 @@ def main():
                 DATA_DIR,
                 LOG_DIR,
                 CKP_DIR,
-                test_amt=0.15,
-                val_amt=0.15,
+                val_percent=0.2,
+                test_amt=3000,
                 learning_rates=lrs,
                 batch_sizes=bss,
                 optimisers=opts,

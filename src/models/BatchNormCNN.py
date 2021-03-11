@@ -16,7 +16,7 @@ class BatchNormCNN(nn.Module):
 
         self.flat = nn.Flatten()
 
-        self.dense1 = nn.Linear(in_features=1600, out_features=64)
+        self.dense1 = nn.Linear(in_features=256, out_features=64)
         self.dense1_bn = nn.BatchNorm1d(64)
 
         self.dense2 = nn.Linear(64, 1)
