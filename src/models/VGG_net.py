@@ -1,6 +1,5 @@
 from torch import nn
-from torch.nn import functional as F
-
+import torch
 
 class VGG_net(nn.Module):
 
@@ -41,7 +40,7 @@ class VGG_net(nn.Module):
         xb = self.conv_layers(xb)
         xb = self.flat(xb)
         xb = self.dense(xb)
-        xb = F.sigmoid(xb)
+        xb = torch.sigmoid(xb)
         return xb
 
 

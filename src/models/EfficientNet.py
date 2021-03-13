@@ -148,7 +148,7 @@ class EfficientNet(nn.Module):
         x = self.pool(self.features(x))
         x = self.flat(x)
         x = self.dense(x)
-        x = F.sigmoid(x)
+        x = torch.sigmoid(x)
         return x
 
 

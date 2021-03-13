@@ -1,5 +1,6 @@
 import torch.nn.functional as F
 from torch import nn
+import torch
 
 class BatchNormCNN(nn.Module):
     def __init__(self):
@@ -27,5 +28,5 @@ class BatchNormCNN(nn.Module):
         xb = F.relu(self.conv3_pool(self.conv3_bn(self.conv3(xb))))
         xb = self.flat(xb)
         xb = F.relu(self.dense1_bn(self.dense1(xb)))
-        xb = F.sigmoid(self.dense2(xb))
+        xb = torch.sigmoid(self.dense2(xb))
         return xb

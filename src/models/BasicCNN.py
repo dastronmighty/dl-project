@@ -27,5 +27,5 @@ class BasicCNN(nn.Module):
         xb = self.avgpool1(xb)
         xb = self.flat(xb)
         xb = torch.sigmoid(self.feed1(xb))
-        xb = F.sigmoid(self.feed2(xb))
+        xb = torch.sigmoid(self.feed2(xb))
         return xb
