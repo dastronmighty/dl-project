@@ -27,5 +27,5 @@ class BatchNormCNN(nn.Module):
         xb = F.relu(self.conv3_pool(self.conv3_bn(self.conv3(xb))))
         xb = self.flat(xb)
         xb = F.relu(self.dense1_bn(self.dense1(xb)))
-        xb = F.log_softmax(self.dense2(xb), dim=1)
+        xb = F.sigmoid(self.dense2(xb))
         return xb

@@ -14,5 +14,7 @@ directories = {
 }
 
 data = Data(directories["data"], verbose=True)
-
 batch = next(iter(data.get_train_data()))
+
+print(batch)
+

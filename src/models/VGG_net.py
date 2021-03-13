@@ -41,7 +41,7 @@ class VGG_net(nn.Module):
         xb = self.conv_layers(xb)
         xb = self.flat(xb)
         xb = self.dense(xb)
-        xb = F.softmax(xb, dim=1)
+        xb = F.sigmoid(xb)
         return xb
 
 

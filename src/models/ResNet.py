@@ -81,7 +81,7 @@ class ResNet(nn.Module):
         x = self.avgpool(x)
         x = self.flat(x)
         x = self.dense1(x)
-        x = F.softmax(x, dim=1)
+        x = F.sigmoid(x)
         return x
 
 
