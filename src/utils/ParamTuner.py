@@ -18,6 +18,7 @@ class ParamTuner:
                  DATA_DIR,
                  LOG_DIR,
                  CKP_DIR,
+                 model_kwargs,
                  total_amt=3000,
                  val_percent=0.2,
                  test_amt=3000,
@@ -62,6 +63,8 @@ class ParamTuner:
         self.LOG_DIR = LOG_DIR
         self.CKP_DIR = CKP_DIR
 
+        self.model_kwargs = model_kwargs
+
         self.trials = {}
         for lr in learning_rates:
             for bs in batch_sizes:
@@ -70,14 +73,13 @@ class ParamTuner:
                         n, m = self.run_trial(lr, bs, optim, lf)
                         self.trials[n] = m
                         if self.verbose:
-                            if self.verbose:
-                                print(self.trials)
+                            print(self.trials)
 
     def run_trial(self, LR, BATCH_SIZE, OPTIM, LOSS):
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"
         NAME += f"_{BATCH_SIZE}"
 
-        model = self.model_class()
+        model = self.model_class(**self.model_kwargs)
 
         opt = OPTIM(model.parameters(), lr=LR)
         opt_str = str(type(opt)).split("'")[-2].split(".")[-1]
