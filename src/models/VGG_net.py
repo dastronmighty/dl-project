@@ -3,15 +3,10 @@ from torch import nn
 
 class VGG_net(nn.Module):
 
-    def __init__(self, in_channels=3, output_size=1, architecture=11):
+    def __init__(self, in_channels=3, output_size=1, arch=None):
         super(VGG_net, self).__init__()
         self.in_channels = in_channels
-        VGG16 = [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"]
-        VGG11 = [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"]
 
-        arch = VGG11
-        if architecture == 16:
-            arch = VGG16
         self.conv_layers = self.create_conv_layers(arch)
 
         self.flat = nn.Flatten()
@@ -23,8 +18,7 @@ class VGG_net(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(),
             nn.Dropout(p=0.5),
-            nn.Linear(4096, out_features=output_size),
-            nn.Softmax(dim=1)
+            nn.Linear(4096, out_features=output_size)
         )
 
     def forward(self, xb):
@@ -47,3 +41,12 @@ class VGG_net(nn.Module):
             elif layer_type == "A":
                 layers += [nn.AvgPool2d(kernel_size=2, stride=2)]
         return nn.Sequential(*layers)
+
+
+def VGG16(in_channels=3, output_size=2):
+    arch = [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"]
+    return VGG_net(in_channels, output_size, arch)
+
+def VGG11(in_channels=3, output_size=2):
+    arch = [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"]
+    return VGG_net(in_channels, output_size, arch)

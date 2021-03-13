@@ -8,11 +8,7 @@ def resize_wrapper(x, y):
     x = transforms.functional.resize(x, size=(244, 244))
     return x, y
 
-
 data = Data(DATA_DIR,
-            batch_size=32,
-            total_amt=10000,
-            val_percent=0.2,
-            test_amt=1000,
             wrapped_function=resize_wrapper,
-            workers=0)
+            workers=0,
+            verbose=True)
