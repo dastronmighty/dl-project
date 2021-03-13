@@ -4,7 +4,16 @@ from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
 
 
-def RunExpt(expt_name, model, model_kwargs, epochs, directories, wrapper=None):
+def RunExpt(expt_name,
+            model,
+            model_kwargs,
+            epochs,
+            directories,
+            wrapper=None,
+            lrs=[0.003],
+            bss=[64],
+            opts=[torch.optim.Adam],
+            losses=[torch.nn.BCELoss]):
     torch.cuda.empty_cache()
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -21,11 +30,6 @@ def RunExpt(expt_name, model, model_kwargs, epochs, directories, wrapper=None):
         "top_tpr_thresh": highest_tpr_thresh,
         "low_fpr_thresh": lowest_fpr_thresh
     }
-
-    lrs = [0.003]
-    bss = [64]
-    opts = [torch.optim.Adam]
-    losses = [torch.nn.BCELoss]
 
     tune = ParamTuner(expt_name,
                       model,
