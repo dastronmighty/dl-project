@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from math import ceil
+import torch.nn.functional as F
 
 from torchsummary import summary
 
@@ -146,14 +147,18 @@ class EfficientNet(nn.Module):
     def forward(self, x):
         x = self.pool(self.features(x))
         x = self.flat(x)
-        return self.dense(x)
+        x = self.dense(x)
+        x = F.softmax(x, dim=1)
+        return x
 
 
 def EfficientNetB0(classes):
     return EfficientNet("b0", classes)
 
+
 def EfficientNetB1(classes):
     return EfficientNet("b1", classes)
+
 
 def EfficientNetB2(classes):
     return EfficientNet("b2", classes)
@@ -161,14 +166,18 @@ def EfficientNetB2(classes):
 def EfficientNetB3(classes):
     return EfficientNet("b3", classes)
 
+
 def EfficientNetB4(classes):
     return EfficientNet("b4", classes)
+
 
 def EfficientNetB5(classes):
     return EfficientNet("b5", classes)
 
+
 def EfficientNetB6(classes):
     return EfficientNet("b6", classes)
+
 
 def EfficientNetB6(classes):
     return EfficientNet("b7", classes)

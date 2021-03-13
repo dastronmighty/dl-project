@@ -1,4 +1,5 @@
 from torch import nn
+from torch.nn import functional as F
 
 
 class VGG_net(nn.Module):
@@ -21,12 +22,6 @@ class VGG_net(nn.Module):
             nn.Linear(4096, out_features=output_size)
         )
 
-    def forward(self, xb):
-        xb = self.conv_layers(xb)
-        xb = self.flat(xb)
-        xb = self.dense(xb)
-        return xb
-
     def create_conv_layers(self, architecture):
         layers = []
         in_channels = self.in_channels
@@ -42,11 +37,20 @@ class VGG_net(nn.Module):
                 layers += [nn.AvgPool2d(kernel_size=2, stride=2)]
         return nn.Sequential(*layers)
 
+    def forward(self, xb):
+        xb = self.conv_layers(xb)
+        xb = self.flat(xb)
+        xb = self.dense(xb)
+        xb = F.softmax(xb, dim=1)
+        return xb
+
 
 def VGG16(in_channels=3, output_size=2):
     arch = [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"]
     return VGG_net(in_channels, output_size, arch)
 
+
 def VGG11(in_channels=3, output_size=2):
     arch = [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"]
     return VGG_net(in_channels, output_size, arch)
+

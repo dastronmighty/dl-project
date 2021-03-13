@@ -1,6 +1,5 @@
 from torch import nn
-
-from torchsummary import summary
+import torch.nn.functional as F
 
 class Block(nn.Module):
     '''
@@ -82,7 +81,9 @@ class ResNet(nn.Module):
         x = self.avgpool(x)
         x = self.flat(x)
         x = self.dense1(x)
+        x = F.softmax(x, dim=1)
         return x
+
 
 def ResNet50(in_channels=3, classes=2):
     return ResNet([3, 4, 6, 3], in_channels, classes)
