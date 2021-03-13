@@ -1,11 +1,17 @@
 import numpy as np
+from src.utils.utils import init_folder
+
 
 class Logger:
 
-    def __init__(self, log_name, log_out, metrics_dict,
+    def __init__(self,
+                 log_name,
+                 log_out,
+                 metrics_dict,
                  train_early_stopping=False,
                  test_early_stopping=False,
                  stopping_attention=3,
+                 overwrite=False,
                  verbose=False):
         self.metrics_dict = metrics_dict
         self.verbose = verbose
@@ -21,7 +27,10 @@ class Logger:
         self.train_losses = []
         self.test_losses = []
 
-        self.f = f"{log_out}/{log_name}.txt"
+        self.path = init_folder(log_name, log_out, overwrite)
+
+        self.f = f"{self.path}/{log_name}.txt"
+
         self.curr_epoch = None
         self.curr_epoch_stats = None
         self.reset_curr_epoch_stats()

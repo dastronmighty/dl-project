@@ -1,7 +1,7 @@
 import os
 import torch
 import shutil
-from src.utils.utils import curr_time
+from src.utils.utils import curr_time, init_folder
 
 
 class Checkpoint:
@@ -9,23 +9,8 @@ class Checkpoint:
     def __init__(self, name, PATH, save_every, overwrite=False):
         self.name = name
         self.overwrite = overwrite
-        self.path = self.init_folder(PATH)
+        self.path = self.init_folder(name, PATH, overwrite)
         self.save_every = save_every
-
-    def init_folder(self, path):
-        if self.name in os.listdir(path):
-            if self.overwrite:
-                shutil.rmtree(f"{path}/{self.name}")
-            else:
-                ct = curr_time()
-                warn = f"Folder {self.name} already existed saving to "
-                self.name = self.name + ct
-                warn += self.name
-                print(warn)
-                os.mkdir(f"{path}/{self.name}")
-        else:
-            os.mkdir(f"{path}/{self.name}")
-        return f"{path}/{self.name}"
 
     def save(self, epoch, model, opt=None, add_tag=None):
         if epoch % self.save_every == 0 and epoch != 0:
