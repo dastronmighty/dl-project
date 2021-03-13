@@ -106,7 +106,7 @@ class ParamTuner:
                         train_early_stopping=True,
                         test_early_stopping=True,
                         stopping_attention=4,
-                        overwrie=self.overwrite,
+                        overwrite=self.overwrite,
                         verbose=self.verbose)
 
         checkpointer = Checkpoint(NAME,

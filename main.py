@@ -1,11 +1,7 @@
 from src.experiments.RunExperiment import RunExpt
-from src.Data.Data import Data
+from src.utils.utils import get_resize_wrapper
 
-from src.models.BasicCNN import BasicCNN
-from src.models.BatchNormCNN import BatchNormCNN
 from src.models.VGG_net import VGG11
-from src.models.ResNet import ResNet50
-from src.models.EfficientNet import EfficientNetB0
 
 directories = {
     "data": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/augmented",
@@ -13,8 +9,11 @@ directories = {
     "ckp": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
 }
 
-data = Data(directories["data"], verbose=True)
-batch = next(iter(data.get_train_data()))
+def main():
+    wrapper = get_resize_wrapper(244)
+    model = VGG11
+    model_kwargs = {"in_channels": 3, "output_size": 1}
+    RunExpt("VGG11TEST", model, model_kwargs, 15, directories, wrapper)
 
-print(batch)
-
+if __name__ == '__main__':
+    main()
