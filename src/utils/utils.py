@@ -5,7 +5,7 @@ import shutil
 import os
 
 
-def current_datetime():
+def curr_time():
     ct = datetime.now().strftime("%Y%m%d%H%M%S")
     return ct
 
@@ -37,7 +37,7 @@ def init_folder(name, path, overwrite):
             shutil.rmtree(f"{path}/{name}")
             os.mkdir(f"{path}/{name}")
         else:
-            ct = current_datetime()
+            ct = curr_time()
             warn = f"Folder {name} already existed saving to "
             name = name + ct
             warn += name

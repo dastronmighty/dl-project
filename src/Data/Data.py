@@ -16,15 +16,15 @@ class Data:
                  batch_size=64,
                  verbose=False,
                  seed=42):
-        self.dev = device
+        self.device = device
         self.batch_size = batch_size
         self.workers = workers
         self.verbose = verbose
         random.seed(seed)
 
-        self.wrapped_function = lambda x, y: mount_to_device(x, y, self.dev)
+        self.wrapped_function = lambda x, y: mount_to_device(x, y, self.device)
         if wrapped_function is not None:
-            self.wrapped_function = lambda x, y: mount_to_device(*wrapped_function(x, y), self.dev)
+            self.wrapped_function = lambda x, y: mount_to_device(*wrapped_function(x, y), self.device)
 
         pos_p, neg_p, unaugmented = self.get_paths(path)
         train_files, val_files, self.test_files = self.put_unaugmented(unaugmented, test_amt, val_percent)
