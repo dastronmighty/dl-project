@@ -2,6 +2,7 @@ import random
 from torch.utils.data import DataLoader
 from src.utils.datautils import WrappedDataLoader, CustomDataset, mount_to_device, seed_worker, get_jpgs_from_path
 from tqdm import tqdm
+import torch
 
 class Data:
     def __init__(self,
@@ -11,7 +12,7 @@ class Data:
                  test_amt=768,
                  wrapped_function=None,
                  workers=0,
-                 device='cpu',
+                 device=torch.device('cpu'),
                  batch_size=64,
                  verbose=False,
                  seed=42):
@@ -21,7 +22,7 @@ class Data:
         self.verbose = verbose
         random.seed(seed)
 
-        self.wrapped_function = mount_to_device
+        self.wrapped_function = lambda x, y: mount_to_device(x, y, self.dev)
         if wrapped_function is not None:
             self.wrapped_function = lambda x, y: mount_to_device(*wrapped_function(x, y), self.dev)
 
