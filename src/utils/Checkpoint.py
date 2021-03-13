@@ -9,7 +9,7 @@ class Checkpoint:
     def __init__(self, name, PATH, save_every, overwrite=False):
         self.name = name
         self.overwrite = overwrite
-        self.path = self.init_folder(name, PATH, overwrite)
+        self.path = init_folder(name, PATH, overwrite)
         self.save_every = save_every
 
     def save(self, epoch, model, opt=None, add_tag=None):
