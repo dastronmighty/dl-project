@@ -152,32 +152,32 @@ class EfficientNet(nn.Module):
         return x
 
 
-def EfficientNetB0(classes):
+def EfficientNetB0(classes=2):
     return EfficientNet("b0", classes)
 
 
-def EfficientNetB1(classes):
+def EfficientNetB1(classes=2):
     return EfficientNet("b1", classes)
 
 
-def EfficientNetB2(classes):
+def EfficientNetB2(classes=2):
     return EfficientNet("b2", classes)
 
-def EfficientNetB3(classes):
+def EfficientNetB3(classes=2):
     return EfficientNet("b3", classes)
 
 
-def EfficientNetB4(classes):
+def EfficientNetB4(classes=2):
     return EfficientNet("b4", classes)
 
 
-def EfficientNetB5(classes):
+def EfficientNetB5(classes=2):
     return EfficientNet("b5", classes)
 
 
-def EfficientNetB6(classes):
+def EfficientNetB6(classes=2):
     return EfficientNet("b6", classes)
 
 
-def EfficientNetB6(classes):
+def EfficientNetB7(classes=2):
     return EfficientNet("b7", classes)

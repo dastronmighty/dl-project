@@ -13,7 +13,8 @@ def RunExpt(expt_name,
             lrs=[0.003],
             bss=[64],
             opts=[torch.optim.Adam],
-            losses=[torch.nn.BCELoss]):
+            losses=[torch.nn.BCELoss],
+            workers=2):
     torch.cuda.empty_cache()
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -21,7 +22,7 @@ def RunExpt(expt_name,
     print(f"Using Device {DEVICE}")
 
     EPOCHS = epochs
-    WORKERS = 2
+    WORKERS = workers
     SAVE_EVERY = 10
 
     metrics_dict = {
