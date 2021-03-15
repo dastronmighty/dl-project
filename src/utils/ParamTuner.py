@@ -18,6 +18,7 @@ class ParamTuner:
                  DATA_DIR,
                  LOG_DIR,
                  CKP_DIR,
+                 augmented,
                  model_kwargs,
                  total_amt=3000,
                  val_percent=0.2,
@@ -38,6 +39,8 @@ class ParamTuner:
         torch.manual_seed(seed)
         random.seed(seed)
         np.random.seed(seed)
+
+        self.augmented = augmented
 
         self.seed = seed
 
@@ -90,6 +93,7 @@ class ParamTuner:
         NAME += f"_{loss_func_str}"
 
         data = Data(self.DATA_DIR,
+                    self.augmented,
                     batch_size=BATCH_SIZE,
                     total_amt=self.total_amt,
                     val_percent=self.val_percent,
