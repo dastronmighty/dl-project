@@ -34,6 +34,10 @@ def ResNet50Expt(directories, workers, aug):
     kwargs = {"in_channels": 3, "classes": 1}
     base_experiment(f"ResNet50{'AUG' if aug else ''}", ResNet50, directories, 244, workers, kwargs, aug)
 
+def ResNet101Expt(directories, workers, aug):
+    kwargs = {"in_channels": 3, "classes": 1}
+    base_experiment(f"ResNet101{'AUG' if aug else ''}", ResNet101, directories, 244, workers, kwargs, aug)
+
 def EfficientNetB0Expt(directories, workers, aug):
     kwargs = {"classes": 1}
     base_experiment(f"EfficientNetB0{'AUG' if aug else ''}", EfficientNetB0, directories, 244, workers, kwargs, aug)
