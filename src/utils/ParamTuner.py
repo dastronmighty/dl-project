@@ -78,7 +78,8 @@ class ParamTuner:
                         self.trials[n] = m
                         if self.verbose:
                             print(self.trials)
-        loss_func = lf()
+
+        loss_func = losses[0]()
         test_ckps(data_dir=self.DATA_DIR,
               auged=False,
               ckp_dir=self.CKP_DIR,
