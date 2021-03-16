@@ -81,7 +81,7 @@ class Logger:
         last_loss = x[last_idx]
         l_grt_last = 0
         for i in range(last_idx - self.stopping_attention, last_idx):
-            if last_loss > x[i]:
+            if last_loss >= x[i]:
                 l_grt_last += 1
         if l_grt_last == self.stopping_attention:
             return True
