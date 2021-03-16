@@ -2,7 +2,6 @@ import torch
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
-from src.utils.test_model import test_model
 
 
 def RunExpt(expt_name,

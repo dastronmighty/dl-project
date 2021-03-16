@@ -93,37 +93,49 @@ class Logger:
         else:
             self.test_losses.append(loss)
 
-    def compress_epoch_stats(self):
-        for stat in self.curr_epoch_stats["train"].keys():
-            mean_stat = np.nanmean(np.array(self.curr_epoch_stats["train"][stat]))
-            self.train_history[stat].append(mean_stat)
+    def compress_test(self):
         test_f_key = list(self.curr_epoch_stats["test"].keys())[0]
         if len(self.curr_epoch_stats["test"][test_f_key]) != 0:
             for stat in self.curr_epoch_stats["test"].keys():
                 mean_stat = np.nanmean(np.array(self.curr_epoch_stats["test"][stat]))
                 self.test_history[stat].append(mean_stat)
+
+    def compress_epoch_stats(self, epoch=0):
+        if epoch == 0:
+            for stat in self.curr_epoch_stats["train"].keys():
+                mean_stat = np.nanmean(np.array(self.curr_epoch_stats["train"][stat]))
+                self.train_history[stat].append(mean_stat)
+        self.compress_test()
         self.reset_curr_epoch_stats()
 
-    def print_epoch(self, epoch):
-        self.compress_epoch_stats()
-        log = f"epoch : {epoch}"
+    def print_epoch(self, epoch, override=None):
+        self.compress_epoch_stats(epoch)
+        log = ""
+        if epoch != -1:
+            log = f"epoch : {epoch}"
         stat_log = ""
         has_test_data = len(self.test_history[list(self.test_history.keys())[0]]) != 0
         for k in self.metrics_dict.keys():
-            stat = self.train_history[k][-1]
-            stat_log += f" - Train {k} : {stat}"
+            if epoch != -1:
+                stat = self.train_history[k][-1]
+                stat_log += f" - Train {k} : {stat}"
             if has_test_data:
                 stat = self.test_history[k][-1]
                 stat_log += f" - Test {k} : {stat}"
         loss_log = ""
-        tr_loss = self.train_losses[-1]
-        avg_tr_loss = np.nanmean(np.array(self.train_losses))
-        loss_log += f"Train Loss : {tr_loss} - Avg. Train Loss : {avg_tr_loss}"
+        if epoch != -1:
+            tr_loss = self.train_losses[-1]
+            avg_tr_loss = np.nanmean(np.array(self.train_losses))
+            loss_log += f"Train Loss : {tr_loss} - Avg. Train Loss : {avg_tr_loss}"
         if len(self.test_losses) != 0:
             te_loss = self.test_losses[-1]
             avg_te_loss = np.nanmean(np.array(self.test_losses))
-            loss_log += f" - Test Loss : {te_loss} - Avg. Test Loss : {avg_te_loss}"
+            loss_log += f" - Test Loss : {te_loss}"
+            if epoch != -1:
+                loss_log += f" - Avg. Test Loss : {avg_te_loss}"
         log = f"{log} - {loss_log}{stat_log}"
+        if override is not None:
+            log = f"{override} - {loss_log}{stat_log}"
         if self.verbose:
             print(log)
         with open(self.f, mode="a") as log_file:

@@ -2,6 +2,7 @@ from src.Data.Data import Data
 from src.utils.Logger import Logger
 from src.utils.Checkpoint import Checkpoint
 from src.utils.fitmodel import FitModel
+from src.experiments.utils import test_ckps
 
 import random
 import numpy as np
@@ -77,6 +78,21 @@ class ParamTuner:
                         self.trials[n] = m
                         if self.verbose:
                             print(self.trials)
+        loss_func = lf()
+        test_ckps(data_dir=self.DATA_DIR,
+              auged=False,
+              ckp_dir=self.CKP_DIR,
+              log_dir=self.LOG_DIR,
+              model=model_class,
+              mets=metrics_to_use,
+              device="cpu",
+              loss_func=loss_func,
+              total_amt=self.total,
+              val_percent=self.val_percent,
+              test_amt=self.test_amt,
+              wrapped_function=wrapped_function,
+              workers=self.workers,
+              seed=self.seed)
 
     def run_trial(self, LR, BATCH_SIZE, OPTIM, LOSS):
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"

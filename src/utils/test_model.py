@@ -16,12 +16,12 @@ def loss_batch(model, xb, yb, loss_func, logger):
     return loss.item(), len(xb)
 
 
-def test_model(data,
+def test_model(test_data,
                model,
                loss_func,
-               logger):
+               logger,
+               name):
     model.eval()
-    test_data = data.get_test_data()
     losses, nums = [], []
     with torch.no_grad():
         for xb, yb in tqdm(test_data, "Test batch"):
@@ -30,5 +30,5 @@ def test_model(data,
             nums.append(n)
     test_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
     logger.log_losses(test_loss, train=False)
-    logger.print_epoch(-1)
+    logger.print_epoch(-1, override=f"Final Stats from {name}")
 

@@ -1,0 +1,1 @@
+Final Stats from BasicCNN_EXPT_0_1_32_Adam_BCELoss_FINAL -  - Test Loss : 0.6315415077209473 - Test auc : 0.5 - Test acc : 0.6873046875 - Test top_tpr_thresh : 0.3754628598690033 - Test low_fpr_thresh : 1.3754628896713257

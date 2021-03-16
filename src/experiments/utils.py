@@ -1,5 +1,8 @@
 from src.Data.Data import Data
 from src.utils.Metrics import auc, acc
+from src.utils.test_model import test_model
+from src.utils.Checkpoint import load_ckp
+from src.utils.Logger import Logger
 
 import numpy as np
 
@@ -10,6 +13,8 @@ import torch.nn as nn
 from tqdm import tqdm
 
 from collections import OrderedDict
+
+import os
 
 
 def resize_wrapper(x, y, s):
@@ -169,3 +174,47 @@ def summary_string(model, input_size, batch_size=-1, device=torch.device('cpu'),
     summary_str += "----------------------------------------------------------------" + "\n"
     # return summary
     return summary_str, (total_params, trainable_params)
+
+
+def test_ckps(data_dir,
+              auged,
+              ckp_dir,
+              log_dir,
+              model,
+              mets,
+              device,
+              loss_func,
+              total_amt,
+              val_percent,
+              test_amt,
+              wrapped_function,
+              workers,
+              seed):
+    data = Data(data_dir,
+                auged,
+                total_amt=total_amt,
+                val_percent=val_percent,
+                test_amt=test_amt,
+                wrapped_function=wrapped_function,
+                workers=workers,
+                device=device,
+                verbose=True,
+                seed=seed)
+    test_data = data.get_test_data()
+    for dir_ in os.listdir(ckp_dir):
+        mod_ckp_dir = f"{ckp_dir}/{dir_}"
+        if os.path.isdir(mod_ckp_dir):
+            for ckp in os.listdir(mod_ckp_dir):
+                if "FINAL" in ckp:
+                    fin_dir = f"{mod_ckp_dir}/{ckp}"
+                    name = ckp.replace(".pt", "")
+                    logger = Logger(f"{name}_TEST",
+                                    log_dir,
+                                    mets,
+                                    overwrite=True,
+                                    verbose=True)
+                    mod = model()
+                    print(f"Loading model from {fin_dir}")
+                    mod, _ = load_ckp(fin_dir, mod, dev=device)
+                    name = name.replace("_FINAL.pt", "")
+                    test_model(test_data, mod, loss_func, logger, name)
