@@ -18,6 +18,20 @@ class Data:
                  batch_size=64,
                  verbose=False,
                  seed=42):
+        """
+
+        :param path:
+        :param augmented:
+        :param total_amt:
+        :param val_percent:
+        :param test_amt:
+        :param wrapped_function:
+        :param workers:
+        :param device:
+        :param batch_size:
+        :param verbose:
+        :param seed:
+        """
         self.device = device
         self.batch_size = batch_size
         self.workers = workers

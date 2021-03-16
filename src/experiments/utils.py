@@ -18,21 +18,47 @@ import os
 
 
 def resize_wrapper(x, y, s):
+    """
+    :param x:
+    :param y:
+    :param s:
+    :return:
+    """
     x = transforms.functional.resize(x, size=(s, s))
     return x, y
 
 
 def get_resize_wrapper(size):
+    """
+
+    :param size:
+    :return:
+    """
     return lambda x, y: resize_wrapper(x, y, size)
 
 
 def summarise_model(model, size):
+    """
+
+    :param model:
+    :param size:
+    :return:
+    """
     mod = model()
     summ, _ = summary(mod, size)
     return summ
 
 
 def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
+    """
+
+    :param epochs:
+    :param model:
+    :param m_kwargs:
+    :param p:
+    :param wrapped:
+    :return:
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using {device}")
     print("Loading Data...")
@@ -65,12 +91,30 @@ def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
 
 
 def summary(model, input_size, batch_size=2, device=torch.device('cpu'), dtypes=None):
+    """
+
+    :param model:
+    :param input_size:
+    :param batch_size:
+    :param device:
+    :param dtypes:
+    :return:
+    """
     result, params_info = summary_string(
         model, input_size, batch_size, device, dtypes)
     return result, params_info
 
 
 def summary_string(model, input_size, batch_size=-1, device=torch.device('cpu'), dtypes=None):
+    """
+
+    :param model:
+    :param input_size:
+    :param batch_size:
+    :param device:
+    :param dtypes:
+    :return:
+    """
     if dtypes == None:
         dtypes = [torch.FloatTensor]*len(input_size)
 
@@ -190,6 +234,24 @@ def test_ckps(data_dir,
               wrapped_function,
               workers,
               seed):
+    """
+
+    :param data_dir:
+    :param auged:
+    :param ckp_dir:
+    :param log_dir:
+    :param model:
+    :param mets:
+    :param device:
+    :param loss_func:
+    :param total_amt:
+    :param val_percent:
+    :param test_amt:
+    :param wrapped_function:
+    :param workers:
+    :param seed:
+    :return:
+    """
     data = Data(data_dir,
                 auged,
                 total_amt=total_amt,
@@ -218,3 +280,4 @@ def test_ckps(data_dir,
                     mod, _ = load_ckp(fin_dir, mod, dev=device)
                     name = name.replace("_FINAL.pt", "")
                     test_model(test_data, mod, loss_func, logger, name)
+

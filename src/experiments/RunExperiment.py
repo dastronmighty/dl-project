@@ -17,6 +17,22 @@ def RunExpt(expt_name,
             losses=[torch.nn.BCELoss],
             workers=2,
             save_every=2):
+    """
+    :param expt_name:
+    :param model:
+    :param model_kwargs:
+    :param epochs:
+    :param directories:
+    :param augmented:
+    :param wrapper:
+    :param lrs:
+    :param bss:
+    :param opts:
+    :param losses:
+    :param workers:
+    :param save_every:
+    :return:
+    """
     torch.cuda.empty_cache()
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")

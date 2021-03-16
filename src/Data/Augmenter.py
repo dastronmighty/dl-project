@@ -4,6 +4,11 @@ from tqdm import tqdm
 
 
 class OcularAugmenter:
+    '''
+    Ocular Augmenter
+
+
+    '''
 
     def __init__(self,
                  DATA_DIR,
@@ -14,6 +19,18 @@ class OcularAugmenter:
                  equalize=False,
                  autocontrast=False,
                  verbose=False):
+        """
+        Creating a new Ocular Augmenter Class
+
+        :param DATA_DIR:
+        :param OUT_DIR:
+        :param size_out:
+        :param rotation_angle:
+        :param invert:
+        :param equalize:
+        :param autocontrast:
+        :param verbose:
+        """
         self.out_dir = f"{OUT_DIR}/augmented"
         os.makedirs(f"{self.out_dir}")
         self.angle = rotation_angle
