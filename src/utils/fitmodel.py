@@ -73,8 +73,5 @@ class FitModel:
             yb = yb.cpu()
             xb = xb.detach().numpy()
             yb = yb.detach().numpy()
-            self.logger.log_batch(epoch,
-                                  xb,
-                                  yb,
-                                  train=train)
+            self.logger.log_batch(epoch, xb, yb, train=train)
         return loss.item(), len(xb)

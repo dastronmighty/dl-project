@@ -8,6 +8,7 @@ class Checkpoint:
         self.name = name
         self.overwrite = overwrite
         self.path = init_folder(name, PATH, overwrite)
+        print(f"Save path = {self.path}")
         self.save_every = save_every
 
     def save(self, epoch, model, opt=None, add_tag=None):
