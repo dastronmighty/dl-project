@@ -16,7 +16,8 @@ def RunExpt(expt_name,
             bss=[64],
             opts=[torch.optim.Adam],
             losses=[torch.nn.BCELoss],
-            workers=2):
+            workers=2,
+            save_every=2):
     torch.cuda.empty_cache()
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -25,7 +26,6 @@ def RunExpt(expt_name,
 
     EPOCHS = epochs
     WORKERS = workers
-    SAVE_EVERY = 10
 
     metrics_dict = {
         "auc": auc,
@@ -53,7 +53,7 @@ def RunExpt(expt_name,
                       EPOCHS=EPOCHS,
                       wrapped_function=wrapper,
                       WORKERS=WORKERS,
-                      SAVE_EVERY=SAVE_EVERY,
+                      SAVE_EVERY=save_every,
                       DEVICE=DEVICE,
                       verbose=True,
                       overwrite=True)

@@ -15,7 +15,7 @@ class Checkpoint:
             self.save_helper(epoch, model, opt=opt, add_tag=add_tag)
 
     def save_override(self, epoch, model, opt=None, add_tag=None):
-        self.save(epoch, model, opt=opt, add_tag=add_tag)
+        self.save_helper(epoch, model, opt=opt, add_tag=add_tag)
 
     def save_helper(self, epoch, model, opt=None, add_tag=None):
         ct = curr_time()
