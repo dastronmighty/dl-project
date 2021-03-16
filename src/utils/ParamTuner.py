@@ -87,7 +87,7 @@ class ParamTuner:
               mets=metrics_to_use,
               device="cpu",
               loss_func=loss_func,
-              total_amt=self.total,
+              total_amt=self.total_amt,
               val_percent=self.val_percent,
               test_amt=self.test_amt,
               wrapped_function=wrapped_function,
