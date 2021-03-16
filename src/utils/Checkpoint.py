@@ -1,6 +1,4 @@
-import os
 import torch
-import shutil
 from src.utils.utils import curr_time, init_folder
 
 
@@ -44,15 +42,3 @@ def load_ckp(checkpoint_path, model, opt=None, dev="cpu"):
     # return model, optimizer
     return model, opt
 
-
-def load_ckp(checkpoint_path, model, opt=None, dev="cpu"):
-    # load check point
-    checkpoint = torch.load(checkpoint_path, map_location=dev)
-    # initialize state_dict from checkpoint to model
-    model.load_state_dict(checkpoint['model_state_dict'])
-    # initialize optimizer from checkpoint to optimizer
-    if opt is not None:
-        opt.load_state_dict(checkpoint['optimizer_state_dict'])
-
-    # return model, optimizer
-    return model, opt

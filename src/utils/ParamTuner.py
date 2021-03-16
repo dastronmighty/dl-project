@@ -27,7 +27,7 @@ class ParamTuner:
                  batch_sizes=[32],
                  optimisers=[torch.optim.SGD],
                  losses=[torch.nn.BCELoss],
-                 SAVE_EVERY=10,
+                 SAVE_EVERY=2,
                  EPOCHS=20,
                  DEVICE='cpu',
                  wrapped_function=None,
