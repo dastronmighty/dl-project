@@ -267,6 +267,7 @@ def test_ckps(data_dir,
                                     overwrite=True,
                                     verbose=True)
                     mod = model(**model_kwargs)
+                    mod.to(device)
                     print(f"Loading model from {fin_dir}")
                     mod, _ = load_ckp(fin_dir, mod, dev=device)
                     name = name.replace("_FINAL.pt", "")
