@@ -38,5 +38,5 @@ def test_model(test_data,
             nums.append(n)
     test_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
     logger.log_losses(test_loss, train=False)
-    logger.print_epoch(-1, override=f"Final Stats from {name}")
+    logger.print_epoch(-1, override_string=f"Final Stats from {name}")
 
