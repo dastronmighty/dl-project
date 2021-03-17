@@ -219,30 +219,29 @@ def test_ckps(data_dir,
               model,
               model_kwargs,
               mets,
-              device,
-              loss_func,
-              total_amt,
-              val_percent,
-              test_amt,
-              wrapped_function,
-              workers,
-              seed):
+              device=torch.device("cpu"),
+              loss_func=torch.nn.BCELoss,
+              total_amt=16384,
+              val_percent=0.25,
+              test_amt=768,
+              wrapped_function=None,
+              workers=0,
+              seed=42):
     """
-    :param data_dir:
-    :param auged:
-    :param ckp_dir:
-    :param log_dir:
-    :param model:
-    :param mets:
-    :param device:
-    :param loss_func:
-    :param total_amt:
-    :param val_percent:
-    :param test_amt:
-    :param wrapped_function:
-    :param workers:
-    :param seed:
-    :return:
+    :param data_dir: the directory to the data
+    :param auged: whether or not the data is augmented or not
+    :param ckp_dir: the directory to the checkpoint
+    :param log_dir: the directory to the logs
+    :param model: the class of the model
+    :param mets: the metrics to use
+    :param device: the device to use
+    :param loss_func: the loss function to use
+    :param total_amt: the total amount of data to use
+    :param val_percent: the percent of data to use for validation
+    :param test_amt: the amount of data to use for testing
+    :param wrapped_function: the wrapped function ot use
+    :param workers: the number of workers to use
+    :param seed: the seed to use
     """
     data = Data(data_dir,
                 auged,
