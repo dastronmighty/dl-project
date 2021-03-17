@@ -36,7 +36,33 @@ class ParamTuner:
                  verbose=False,
                  overwrite=False,
                  seed=42):
-
+        """
+        This was a class made for the purposes of hyperparameter tuning to wrap everything together
+        :param Name: The name of the experiment
+        :param model_class: the class of the model to use for tuning
+        :param metrics_to_use: the metrics to use
+        :param metric_to_optimise: the metric we are looking to optimise
+        :param DATA_DIR: the data directory path
+        :param LOG_DIR: the directory to save logs to
+        :param CKP_DIR: the directory to save checkpoints to
+        :param augmented: whether this experiment is using augmented data or not
+        :param model_kwargs: the arguments to pass to the model initialise
+        :param total_amt: the amount of data to use for training
+        :param val_percent: the percent of total data to use for validation
+        :param test_amt: the amount of data to set aside for testing after tuning
+        :param learning_rates: a list of learning rates to try length >= 1
+        :param batch_sizes: a list of batch sizes to try length >= 1
+        :param optimisers: a list of optimizers to try length >= 1
+        :param losses: a list of loss functions to try length >= 1
+        :param SAVE_EVERY: how often to save the models and optimizers
+        :param EPOCHS: the number of epochs to train for
+        :param DEVICE: the device to use
+        :param wrapped_function: a wrapped function for data loading if needed
+        :param WORKERS: the number of workers for dataloading to use
+        :param verbose: whether to print the status of whats happening
+        :param overwrite: whether to overwrite previous experiments with the same name
+        :param seed: a seed for reproducibility
+        """
         torch.manual_seed(seed)
         random.seed(seed)
         np.random.seed(seed)
@@ -85,6 +111,7 @@ class ParamTuner:
               ckp_dir=self.CKP_DIR,
               log_dir=self.LOG_DIR,
               model=model_class,
+              model_kwargs=self.model_kwargs,
               mets=metrics_to_use,
               device="cpu",
               loss_func=loss_func,
@@ -96,6 +123,16 @@ class ParamTuner:
               seed=self.seed)
 
     def run_trial(self, LR, BATCH_SIZE, OPTIM, LOSS):
+        """
+        Initalise all over again for training on given Learning rate, Batch size, Optimizer and loss function
+        This function basically just initialises everything and sends it to the fitmodel
+        :param LR: Learning Rate
+        :param BATCH_SIZE: Batch Size
+        :param OPTIM: Optimiser
+        :param LOSS: Loss Function
+        :return: The final metric to optimise score from the training
+        """
+
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"
         NAME += f"_{BATCH_SIZE}"
 

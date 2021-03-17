@@ -1,20 +1,14 @@
-from src.experiments.experiments import BasicCNNExpt
 
-directories = {
-    "data": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/augmented",
-    "ckp": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints",
-    "log": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
-}
+"""
+Run everything together
 
-aug_directories = {
-    "data": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images",
-    "ckp": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/checkpoints",
-    "log": "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/logs"
-}
-
+WARNING THIS COULD TAKE DAYS.
+RECCOMMENDED USE IS TO TAKE ONE EXPERIMENT FROM THE EXPERIMENTS PACKAGE AND RUN IT.
+THIS FILE RUNS EVERYTHING I DID THROUGHOUT THE PROJECT ALL AT ONCE
+"""
 
 def main():
-    BasicCNNExpt(aug_directories, 0, False)
+    pass
 
 
 if __name__ == '__main__':

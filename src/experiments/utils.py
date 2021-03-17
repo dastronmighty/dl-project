@@ -17,12 +17,13 @@ from collections import OrderedDict
 import os
 
 
-def resize_wrapper(x, y, s):
+def resize(x, y, s):
     """
-    :param x:
-    :param y:
-    :param s:
-    :return:
+    Resize X to s x s
+    :param x: 2d tensor to resize
+    :param y: labels
+    :param s: size to resize to
+    :return: x, y
     """
     x = transforms.functional.resize(x, size=(s, s))
     return x, y
@@ -30,20 +31,15 @@ def resize_wrapper(x, y, s):
 
 def get_resize_wrapper(size):
     """
-
-    :param size:
-    :return:
+    a quick helper for making a wrapper function for resizing the data
+    :param size: the size to resize to
+    :return: a function that will resize X and give back x, y (as required)
     """
-    return lambda x, y: resize_wrapper(x, y, size)
+    return lambda x, y: resize(x, y, size)
 
 
 def summarise_model(model, size):
-    """
-
-    :param model:
-    :param size:
-    :return:
-    """
+    # Less stressful interface to model summary
     mod = model()
     summ, _ = summary(mod, size)
     return summ
@@ -51,13 +47,13 @@ def summarise_model(model, size):
 
 def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
     """
-
-    :param epochs:
-    :param model:
-    :param m_kwargs:
-    :param p:
-    :param wrapped:
-    :return:
+    Chcke how a model does on one batch of data (mostly used to check for bugs so as to not run entire training sessions)
+    it is also used to see if a model can fit to the one batch of data
+    :param epochs: number of Epochs to train for
+    :param model: the model class to use
+    :param m_kwargs: the mosel arguments to use
+    :param p: the path to the data
+    :param wrapped: a function to use on the data if required (pass None if not)
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using {device}")
@@ -91,15 +87,7 @@ def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
 
 
 def summary(model, input_size, batch_size=2, device=torch.device('cpu'), dtypes=None):
-    """
-
-    :param model:
-    :param input_size:
-    :param batch_size:
-    :param device:
-    :param dtypes:
-    :return:
-    """
+    # summaries model
     result, params_info = summary_string(
         model, input_size, batch_size, device, dtypes)
     return result, params_info
@@ -107,13 +95,17 @@ def summary(model, input_size, batch_size=2, device=torch.device('cpu'), dtypes=
 
 def summary_string(model, input_size, batch_size=-1, device=torch.device('cpu'), dtypes=None):
     """
+    a pytorch version of TF's Summary() funciton
+    This is taken from this package:
 
-    :param model:
-    :param input_size:
-    :param batch_size:
-    :param device:
-    :param dtypes:
-    :return:
+    The package for some reason only prints out the summary but I wanted to get the string so I yoinked out the code
+    and made it return the string
+    :param model: a model to show the summary of
+    :param input_size: the required input size (as a shape tuple) of the model (batch size excluded)
+    :param batch_size: the batch size to show
+    :param device: device to use
+    :param dtypes: if other dtypes are required
+    :return: the summary string of the model
     """
     if dtypes == None:
         dtypes = [torch.FloatTensor]*len(input_size)
@@ -225,6 +217,7 @@ def test_ckps(data_dir,
               ckp_dir,
               log_dir,
               model,
+              model_kwargs,
               mets,
               device,
               loss_func,
@@ -235,7 +228,6 @@ def test_ckps(data_dir,
               workers,
               seed):
     """
-
     :param data_dir:
     :param auged:
     :param ckp_dir:
@@ -275,7 +267,7 @@ def test_ckps(data_dir,
                                     mets,
                                     overwrite=True,
                                     verbose=True)
-                    mod = model()
+                    mod = model(**model_kwargs)
                     print(f"Loading model from {fin_dir}")
                     mod, _ = load_ckp(fin_dir, mod, dev=device)
                     name = name.replace("_FINAL.pt", "")

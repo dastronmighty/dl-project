@@ -6,6 +6,9 @@ from src.models.EfficientNet import EfficientNetB0, EfficientNetB1, EfficientNet
 
 from src.experiments.utils import summarise_model
 
+"""
+Summaries all the models
+"""
 
 def main():
     models = [BasicCNN, BatchNormCNN, VGG11, VGG16,

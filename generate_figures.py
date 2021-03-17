@@ -8,12 +8,17 @@ from src.Data.Data import Data
 from src.utils.utils import show_dataset
 from src.utils.datautils import sample_from_data_loader
 
+
+"""
+Created collage of figurs from give directory
+"""
 DATA_PATH = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
 
 def main():
     dev = torch.device("cpu")
 
     data = Data(DATA_PATH,
+                augmented=False,
                 workers=0,
                 device=dev,
                 batch_size=128)

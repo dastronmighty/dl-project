@@ -8,17 +8,34 @@ from torch.utils.data import Dataset
 
 
 def seed_worker(worker_id):
+    """
+    Seed a worker (if using). This is provided by pytorch as how to ensure reporducibility
+    """
     worker_seed = torch.initial_seed() % 2**32
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
 
 class CustomDataset(Dataset):
+    """
+    This is a custom dataset we will use for this project it deals specifically with folders of images as data.
+    loading all the images as pytorch tensors is not possible due to the size required
+    also needing to be able to change sizes on the fly means we cant pre split tensors and use them
+    the solution is a custom dataset for loading images to tensors
+    """
 
     def __init__(self, files):
+        """
+        :param files: the list of paths
+        """
         self.files = files
 
     def preprocess(self, file):
+        """
+        turn file path to lable and tensor
+        :param file: the file
+        :return: image tensor as x, label as y
+        """
         y = int(file[-5:-4])
         img = torchvision.io.read_image(file)
         x = img.float()
@@ -32,6 +49,10 @@ class CustomDataset(Dataset):
 
 
 class WrappedDataLoader:
+    """
+    a useful helper for wrapping data loaders with functions we might want to apply
+    without having to hardcode it into our Custom dataset
+    """
     def __init__(self, dl, func):
         self.dl = dl
         self.func = func
@@ -46,10 +67,16 @@ class WrappedDataLoader:
 
 
 def mount_to_device(x, y, dev):
+    # mount x and y to a given device
     return x.to(dev), y.to(dev)
 
 
 def get_jpgs_from_path(path):
+    """
+    recursively list through a given directory and get all the jpg file paths
+    :param path: the starting file
+    :return: list of all jpgs underneath the path
+    """
     imgs = []
     for _ in os.listdir(path):
         p = f"{path}/{_}"
@@ -62,4 +89,5 @@ def get_jpgs_from_path(path):
 
 
 def sample_from_data_loader(data_loader):
+    # sample one batch from a dataloader
     return next(iter(data_loader))

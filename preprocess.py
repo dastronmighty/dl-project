@@ -1,5 +1,11 @@
 from src.Data.Preprocessor import Preproccessor
 
+"""
+Preprocess the data
+
+DATA_PATH should be the directory downloaded from kaggle
+"""
+
 DATA_PATH = "../data.nosync"
 
 def main():

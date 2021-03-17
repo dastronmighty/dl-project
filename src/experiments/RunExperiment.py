@@ -18,20 +18,22 @@ def RunExpt(expt_name,
             workers=2,
             save_every=2):
     """
-    :param expt_name:
-    :param model:
-    :param model_kwargs:
-    :param epochs:
-    :param directories:
-    :param augmented:
-    :param wrapper:
-    :param lrs:
-    :param bss:
-    :param opts:
-    :param losses:
-    :param workers:
-    :param save_every:
-    :return:
+    Run an experiment
+    Basically just bunch all the things I need together for hyperparam tuning so I dont have to always write it out
+    also now we can wrap it up for different models aswell
+    :param expt_name: the name of the experiment
+    :param model:the class of the model to use for tuning
+    :param model_kwargs: the arguments to pass to the model initialise
+    :param epochs: the number of epochs to train for
+    :param directories: a dictionary of the data, log, and checkpoint directories
+    :param augmented: whether this experiment is using augmented data or not
+    :param wrapper: a wrapper function for data loading if needed
+    :param lrs: a list of learning rates to try length >= 1
+    :param bss: a list of batch sizes to try length >= 1
+    :param opts: a list of optimizers to try length >= 1
+    :param losses: a list of loss functions to try length >= 1
+    :param workers: the number of workers for dataloading to use
+    :param save_every: how often to save the models and optimizers
     """
     torch.cuda.empty_cache()
 

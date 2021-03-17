@@ -11,7 +11,10 @@ def curr_time():
 
 
 def tensorToLabels(Y):
-    labels = ["Disease", "Normal"]
+    """Turn a tensor to a list of string labels
+    :param Y: the tensor of labels
+    """
+    labels = ["Disease","Normal"]
     to_lab = []
     for y in Y:
         to_lab.append(labels[y])
@@ -19,6 +22,11 @@ def tensorToLabels(Y):
 
 
 def show_dataset(X, Y):
+    """
+    Show 9 images from a given batch
+    :param X: Batch X
+    :param Y: Batch Y
+    """
     to_show, l = X[0:9], tensorToLabels(Y[0:9])
     rows, cols = 3, 3
     f, axs = plt.subplots(rows, cols, figsize=((5 * cols), (5 * rows)))
@@ -32,6 +40,13 @@ def show_dataset(X, Y):
 
 
 def init_folder(name, path, overwrite):
+    """
+    A handy function for making sure there are no upsets when creating the folders for the logs and checkpoints
+    :param name: the name of the folder
+    :param path: the path to create the folder in
+    :param overwrite: wether to delete the folder with the same name in the path if one is found
+    :return: the path to the created folder
+    """
     if name in os.listdir(path):
         if overwrite:
             shutil.rmtree(f"{path}/{name}")

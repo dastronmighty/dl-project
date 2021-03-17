@@ -1,5 +1,11 @@
 from src.Data.Augmenter import OcularAugmenter
 
+"""
+augment data
+
+DATA_DIR SHOULD BE THE DIRECTORY CREATED BY THE Preprocess program
+"""
+
 DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
 OUT_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1"
 

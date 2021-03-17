@@ -19,18 +19,18 @@ class Data:
                  verbose=False,
                  seed=42):
         """
-
-        :param path:
-        :param augmented:
-        :param total_amt:
-        :param val_percent:
-        :param test_amt:
-        :param wrapped_function:
-        :param workers:
-        :param device:
-        :param batch_size:
-        :param verbose:
-        :param seed:
+        An object to Take Data from a path and convert it to tensors
+        :param path: Path to Data
+        :param augmented: whether the data is augmented or not
+        :param total_amt: the total amount of data to use for Training and Validation
+        :param val_percent: the percentage of data to use for Validation
+        :param test_amt: the amount of Data to set aside for Testing
+        :param wrapped_function: a function to apply to the data if required
+        :param workers: the number of workers to use
+        :param device: the device to use
+        :param batch_size: the batch size to use
+        :param verbose: the verbosity to use
+        :param seed: the seed to use for reproducibility
         """
         self.device = device
         self.batch_size = batch_size
@@ -73,6 +73,13 @@ class Data:
                 print("There are no duplicates in data!")
 
     def get_non_augmented_sets(self, dir, total_amt, val_percent, test_amt):
+        """
+        Function to get the datasets for non-augmented data
+        :param dir: directory to data
+        :param total_amt: the total amount of data to use for Training and Validation
+        :param val_percent: the percentage of data to use for Validation
+        :param test_amt: the amount of Data to set aside for Testing
+        """
         paths = self.get_paths_from_dir(dir)
         len_p = len(paths)
         test_amt = test_amt if (test_amt < (len_p * 0.5)) else int(len_p * 0.2)
@@ -83,17 +90,33 @@ class Data:
         self.train_files, self.val_files = paths[0:trn_amt], paths[trn_amt:]
 
     def get_augmented_sets(self, dir, total_amt, val_percent, test_amt):
+        """
+        Function to get the datasets for augmented data
+        :param dir: directory to data
+        :param total_amt: the total amount of data to use for Training and Validation
+        :param val_percent: the percentage of data to use for Validation
+        :param test_amt: the amount of Data to set aside for Testing
+        """
         pos_p, neg_p, unaugmented = self.get_augmented_paths(dir)
         train_files, val_files, self.test_files = self.put_unaugmented(unaugmented, test_amt, val_percent)
         self.train_files, self.val_files = self.split_file_paths(pos_p, neg_p, train_files, val_files, total_amt,
                                                                  val_percent)
 
     def get_paths_from_dir(self, dir):
+        """
+        :param dir: directory to data
+        :return: the absolute paths for the data
+        """
         paths = get_jpgs_from_path(dir)
         random.shuffle(paths)
         return paths
 
     def split_into_p_and_n(self, paths):
+        """
+        Split Data paths into positive and negative paths
+        :param paths: A list of paths to split
+        :return: two lists one of positve imgs and one of negative imgs
+        """
         pos_samples, neg_samples = [], []
         for p in tqdm(paths, "Splitting", disable=(not self.verbose)):
             if p[-5:-4] == "1":
@@ -103,10 +126,20 @@ class Data:
         return pos_samples, neg_samples
 
     def calc_distribution(self, paths):
+        """
+        calculate the number of each class in dataset
+        :param paths: the array of paths to calculate on
+        :return: the number of positive and negatives in the paths list
+        """
         pos, neg = self.split_into_p_and_n(paths)
         return len(pos), len(neg)
 
     def get_augmented_paths(self, dir):
+        """
+        Get the paths for the augmented data
+        :param dir: The directory to get the data from
+        :return: positive paths, negative paths, and unaugmented data
+        """
         paths = self.get_paths_from_dir(dir)
         if self.verbose:
             print(f"Pulling out un-augmented imgs")
@@ -119,6 +152,17 @@ class Data:
         return pos_samples, neg_samples, unaugmented
 
     def split_file_paths(self, pos_p, neg_p, train_files, val_files, t_amt, v_p):
+        """
+        Split the file paths into the train files and validation files and make sure that
+        the number of positive and negatives are balanced.
+        :param pos_p: the positive paths
+        :param neg_p: the negative paths
+        :param train_files: the current train files
+        :param val_files: the current validation files
+        :param t_amt: the total amount of data to use
+        :param v_p: the percent of data to use for validation
+        :return: train and validation files
+        """
         v_amt = int(t_amt * v_p)
         tr_amt = t_amt - v_amt
         trp, trn = self.calc_distribution(train_files)
@@ -134,6 +178,13 @@ class Data:
         return train_files, val_files
 
     def put_unaugmented(self, unaugmented, test_amt, vp):
+        """
+        Put unaugmented files into the test train, test, and validation lists
+        :param unaugmented: the unagmented data array
+        :param test_amt: the amount of data to use for test data
+        :param vp: the validation percent
+        :return: train, validation, and test files
+        """
         test_files = unaugmented[0:test_amt]
         unaugmented = unaugmented[test_amt:]
         lau = len(unaugmented)
@@ -143,6 +194,10 @@ class Data:
         return train_files, val_files, test_files
 
     def get_train_data(self):
+        """
+        Get the Training Data Loader
+        :return: The Wrapped Data Loader
+        """
         data = CustomDataset(self.train_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
@@ -152,6 +207,10 @@ class Data:
         return WrappedDataLoader(dl, self.wrapped_function)
 
     def get_val_data(self):
+        """
+        Get the Validation Data Loader
+        :return: The Wrapped Data Loader
+        """
         data = CustomDataset(self.val_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
@@ -161,6 +220,10 @@ class Data:
         return WrappedDataLoader(dl, self.wrapped_function)
 
     def get_test_data(self):
+        """
+        Get the Testing Data Loader
+        :return: The Wrapped Data Loader
+        """
         data = CustomDataset(self.test_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,

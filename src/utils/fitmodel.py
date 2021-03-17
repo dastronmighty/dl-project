@@ -17,6 +17,19 @@ class FitModel:
                  checkpointer,
                  verbose=False,
                  seed=42):
+        """
+        The main class used to actually train models
+        :param model: the model to train
+        :param data: data to use (Of type Data from this package)
+        :param opt: optimizer to use
+        :param loss_func: loss function to use
+        :param epochs: number of epochs to train for
+        :param dev: what device to use
+        :param logger: a logger to record training
+        :param checkpointer: a checkpointer to save the trained (and mid training) model(s)
+        :param verbose: the verbosity of training
+        :param seed: the seed to use for reproducibility
+        """
         torch.manual_seed(seed)
         random.seed(seed)
         np.random.seed(seed)

@@ -21,6 +21,14 @@ def test_model(test_data,
                loss_func,
                logger,
                name):
+    """
+    Test a model on test data
+    :param test_data: the test data
+    :param model: the model to test
+    :param loss_func: the loss function to use
+    :param logger: the logger for recording the test
+    :param name: the name of the experiment
+    """
     model.eval()
     losses, nums = [], []
     with torch.no_grad():
