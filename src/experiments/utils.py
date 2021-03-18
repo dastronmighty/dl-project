@@ -38,10 +38,10 @@ def get_resize_wrapper(size):
     return lambda x, y: resize(x, y, size)
 
 
-def summarise_model(model, size):
+def summarise_model(model, size, bs):
     # Less stressful interface to model summary
     mod = model()
-    summ, _ = summary(mod, size)
+    summ, _ = summary(mod, size, bs)
     return summ
 
 
