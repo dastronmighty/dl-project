@@ -86,20 +86,20 @@ def EfficientNetB3Expt(directories, workers, aug, save_every=5):
 
 def EfficientNetB4Expt(directories, workers, aug, save_every=5):
     model_kwargs = {"classes": 1}
-    base_experiment(f"EfficientNetB4{'AUG' if aug else ''}", EfficientNetB4, directories, 300, workers, model_kwargs, aug, save_every=save_every)
+    base_experiment(f"EfficientNetB4{'AUG' if aug else ''}", EfficientNetB4, directories, 380, workers, model_kwargs, aug, save_every=save_every)
 
 
 def EfficientNetB5Expt(directories, workers, aug, save_every=5):
     model_kwargs = {"classes": 1}
-    base_experiment(f"EfficientNetB5{'AUG' if aug else ''}", EfficientNetB5, directories, 300, workers, model_kwargs, aug, save_every=save_every)
+    base_experiment(f"EfficientNetB5{'AUG' if aug else ''}", EfficientNetB5, directories, 457, workers, model_kwargs, aug, save_every=save_every)
 
 
 def EfficientNetB6Expt(directories, workers, aug, save_every=5):
     model_kwargs = {"classes": 1}
-    base_experiment(f"EfficientNetB6{'AUG' if aug else ''}", EfficientNetB6, directories, 300, workers, model_kwargs, aug, save_every=save_every)
+    base_experiment(f"EfficientNetB6{'AUG' if aug else ''}", EfficientNetB6, directories, 528, workers, model_kwargs, aug, save_every=save_every)
 
 
 def EfficientNetB7Expt(directories, workers, aug, save_every=5):
     model_kwargs = {"classes": 1}
-    base_experiment(f"EfficientNetB7{'AUG' if aug else ''}", EfficientNetB7, directories, 300, workers, model_kwargs, aug, save_every=save_every)
+    base_experiment(f"EfficientNetB7{'AUG' if aug else ''}", EfficientNetB7, directories, 600, workers, model_kwargs, aug, save_every=save_every)
 
