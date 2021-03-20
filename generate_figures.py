@@ -1,45 +1,32 @@
-from matplotlib import pyplot as plt
+from src.utils.Plotting import get_log_dirs, dfs_from_logs, gen_feature_pics, gen_feature_collage, gen_final_hist
+from src.utils.utils import init_folder
 
-import torch
+LOG_DIR = "./logs"
+FIG_DIR = "./figs"
 
-from tqdm import tqdm
-
-from src.Data.Data import Data
-from src.utils.utils import show_dataset
-from src.utils.datautils import sample_from_data_loader
-
-
-"""
-Created collage of figurs from give directory
-"""
-DATA_PATH = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
 
 def main():
-    dev = torch.device("cpu")
+    log_directories = get_log_dirs(LOG_DIR)
+    features_to_plot = [
+        ["Train Loss", "Validation Loss"],
+        ["Train auc", "Validation auc"],
+        ["Train acc", "Validation acc"],
+        ["Train Loss", "Validation Loss",
+         "Train auc", "Validation auc",
+         "Train acc", "Validation acc"]
+    ]
+    for log_dir in log_directories:
+        name, all_logs, finals_df = dfs_from_logs(log_dir)
+        save_dir = init_folder(name, FIG_DIR, True)
+        for feats_to_plt in features_to_plot:
+            f = gen_feature_pics(all_logs, feats_to_plt, save_to=save_dir)
+            f = gen_feature_collage(all_logs, feats_to_plt, save_to=save_dir, smol_font_size=10, figsize=(25, 25))
+            f = gen_final_hist(name, finals_df, save_to=save_dir)
 
-    data = Data(DATA_PATH,
-                augmented=False,
-                workers=0,
-                device=dev,
-                batch_size=128)
-
-    print("Creating Training Figure")
-    xb, yb = sample_from_data_loader(data.get_train_data())
-    f = show_dataset(xb, yb)
-    f.suptitle('Subset of Eye Training Data', fontsize=30)
-    f.savefig("./figs/eyes_train")
-
-    print("Creating Validation Figure")
-    xb, yb = sample_from_data_loader(data.get_val_data())
-    f = show_dataset(xb, yb)
-    f.suptitle('Subset of Eye Validation Data', fontsize=30)
-    f.savefig("./figs/eyes_val")
-
-    print("Creating Testing Figure")
-    xb, yb = sample_from_data_loader(data.get_test_data())
-    f = show_dataset(xb, yb)
-    f.suptitle('Subset of Eye Testing Data', fontsize=30)
-    f.savefig("./figs/eyes_test")
 
 if __name__ == '__main__':
     main()
+
+
+
+

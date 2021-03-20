@@ -2,7 +2,10 @@
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
-augmented
 .idea
 .DS_Store
+augmented
 preprocessed_data_images
+figs
+checkpoints
+logs

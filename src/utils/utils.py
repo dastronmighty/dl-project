@@ -31,10 +31,10 @@ def show_dataset(X, Y):
     rows, cols = 3, 3
     f, axs = plt.subplots(rows, cols, figsize=((5 * cols), (5 * rows)))
     for i, x in enumerate(to_show):
-        im = ((x.permute(1, 2, 0))*255).int()
+        im = (x.permute(1, 2, 0)).int()
         idx1, idx2 = i // cols, i % cols
         axs[idx1, idx2].imshow(im)
-        axs[idx1, idx2].set_title(i)
+        axs[idx1, idx2].set_title(l[i])
         axs[idx1, idx2].axis('off')
     return f
 
