@@ -35,6 +35,9 @@ class ParamTuner:
                  WORKERS=0,
                  verbose=False,
                  overwrite=False,
+                 train_early_stopping=True,
+                 test_early_stopping=True,
+                 early_stopping_attention=4,
                  seed=42):
         """
         This was a class made for the purposes of hyperparameter tuning to wrap everything together
@@ -63,6 +66,7 @@ class ParamTuner:
         :param overwrite: whether to overwrite previous experiments with the same name
         :param seed: a seed for reproducibility
         """
+
         torch.manual_seed(seed)
         random.seed(seed)
         np.random.seed(seed)
@@ -94,6 +98,10 @@ class ParamTuner:
         self.CKP_DIR = CKP_DIR
 
         self.model_kwargs = model_kwargs
+
+        self.tres = train_early_stopping
+        self.tes = test_early_stopping
+        self.es_attn = early_stopping_attention
 
         self.trials = {}
         for lr in learning_rates:
@@ -161,16 +169,16 @@ class ParamTuner:
         logger = Logger(NAME,
                         self.LOG_DIR,
                         self.metrics_to_use,
-                        train_early_stopping=True,
-                        test_early_stopping=True,
-                        stopping_attention=4,
+                        train_early_stopping=self.tres,
+                        test_early_stopping=self.tes,
+                        stopping_attention=self.es_attn,
                         overwrite=self.overwrite,
                         verbose=self.verbose)
 
         checkpointer = Checkpoint(NAME,
-                                  self.CKP_DIR,
-                                  self.save_every,
-                                  overwrite=self.overwrite)
+                            self.CKP_DIR,
+                            self.save_every,
+                            overwrite=self.overwrite)
 
         FitModel(model,
                  data,

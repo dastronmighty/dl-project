@@ -16,7 +16,8 @@ def RunExpt(expt_name,
             opts=[torch.optim.Adam],
             losses=[torch.nn.BCELoss],
             workers=2,
-            save_every=2):
+            save_every=2,
+            **kwargs):
     """
     Run an experiment
     Basically just bunch all the things I need together for hyperparam tuning so I dont have to always write it out
@@ -34,6 +35,7 @@ def RunExpt(expt_name,
     :param losses: a list of loss functions to try length >= 1
     :param workers: the number of workers for dataloading to use
     :param save_every: how often to save the models and optimizers
+    :param kwargs: the optional kwargs to pass to the param tuner
     """
     torch.cuda.empty_cache()
 
@@ -73,7 +75,8 @@ def RunExpt(expt_name,
                       SAVE_EVERY=save_every,
                       DEVICE=DEVICE,
                       verbose=True,
-                      overwrite=True)
+                      overwrite=True,
+                      **kwargs)
 
     print(f"HYPER-PARAM OUTPUT: {tune.trials}")
     print(f"EXPERIMENT {expt_name} FINISHED")

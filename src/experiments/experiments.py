@@ -20,7 +20,8 @@ def base_experiment(name,
                     lrs=[0.1, 0.003, 0.0008, 0.0001],
                     bss=[32, 64],
                     opts=[torch.optim.Adam],
-                    losses=[torch.nn.BCELoss]):
+                    losses=[torch.nn.BCELoss],
+                    **kwargs):
     """
     Run a single experiment
     :param name: name of experiment
@@ -35,9 +36,23 @@ def base_experiment(name,
     :param bss: The Batch Sizes to try
     :param opts: The Optimizers to try
     :param losses: The Loss Functions to try
+    :param kwargs: the optional kwargs to pass to the param tuner
     """
     wrapper = get_resize_wrapper(size)
-    RunExpt(f"{name}_EXPT", model, model_kwargs, 100, directories, aug, wrapper, lrs=lrs, bss=bss, opts=opts, losses=losses, workers=workers, save_every=save_every)
+    RunExpt(f"{name}_EXPT",
+            model,
+            model_kwargs,
+            100,
+            directories,
+            aug,
+            wrapper,
+            lrs=lrs,
+            bss=bss,
+            opts=opts,
+            losses=losses,
+            workers=workers,
+            save_every=save_every,
+            **kwargs)
 
 
 def BasicCNNExpt(directories, workers, aug, **kwargs):
@@ -51,7 +66,7 @@ def BatchNormCNNExpt(directories, workers, aug, **kwargs):
 
 
 def VGG11Expt(directories, workers, aug, **kwargs):
-    model_kwargs = {"in_channels":3, "output_size":1}
+    model_kwargs = {"in_channels" : 3, "output_size" : 1}
     base_experiment(f"VGG11{'AUG' if aug else ''}", VGG11, directories, 244, workers, model_kwargs, aug, **kwargs)
 
 
