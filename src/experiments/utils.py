@@ -1,6 +1,6 @@
 from src.Data.Data import Data
 from src.utils.Metrics import auc, acc
-from src.utils.test_model import test_model
+from src.utils.testmodelutils import test_model
 from src.utils.Checkpoint import load_ckp
 from src.utils.Logger import Logger
 
@@ -272,4 +272,27 @@ def test_ckps(data_dir,
                     mod, _ = load_ckp(fin_dir, mod, dev=device)
                     name = name.replace("_FINAL.pt", "")
                     test_model(test_data, mod, loss_func, logger, name)
+
+def test_model_checkpoint(ckp_path, model_class, model_kwargs, resize_size, data_path):
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    wrapper = get_resize_wrapper(resize_size)
+    print("Loading Data...")
+    data = Data(data_path,
+                augmented=True,
+                device=dev,
+                batch_size=32,
+                wrapped_function=wrapper,
+                verbose=True)
+    print("Loading Model...")
+    mod = model_class(**model_kwargs)
+    mod, _ = load_ckp(ckp_path, mod)
+    print("Predicting...")
+    aucs = []
+    accs = []
+    for xb, yb in tqdm(data.get_test_data()):
+        ypredb = mod(xb).flatten().cpu().detach().numpy()
+        yb = yb.float().cpu().detach().numpy()
+        aucs.append(auc(yb, ypredb))
+        accs.append(acc(yb, ypredb))
+    return np.mean(aucs), np.mean(accs)
 

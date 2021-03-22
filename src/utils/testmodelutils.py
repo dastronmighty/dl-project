@@ -1,6 +1,7 @@
 import torch
-from tqdm import tqdm
 import numpy as np
+from tqdm import tqdm
+
 
 
 def loss_batch(model, xb, yb, loss_func, logger):
@@ -39,4 +40,3 @@ def test_model(test_data,
     test_loss = np.sum(np.multiply(losses, nums)) / np.sum(nums)
     logger.log_losses(test_loss, train=False)
     logger.print_epoch(-1, override_string=f"Final Stats from {name}")
-

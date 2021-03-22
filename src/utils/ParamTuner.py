@@ -115,7 +115,7 @@ class ParamTuner:
 
         loss_func = losses[0]()
         test_ckps(data_dir=self.DATA_DIR,
-              auged=False,
+              auged=True,
               ckp_dir=self.CKP_DIR,
               log_dir=self.LOG_DIR,
               model=model_class,
