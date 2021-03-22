@@ -12,8 +12,8 @@ from src.utils.datautils import sample_from_data_loader
 Created collage of figures from give directory
 """
 
-DATA_PATH = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
-DATA_AUG_PATH = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/augmented"
+DATA_PATH = "./preprocessed_data_images"
+DATA_AUG_PATH = "./augmented"
 FIG_DIR = "./figs"
 
 

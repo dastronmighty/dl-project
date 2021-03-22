@@ -6,8 +6,8 @@ augment data
 DATA_DIR SHOULD BE THE DIRECTORY CREATED BY THE Preprocess program
 """
 
-DATA_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1/preprocessed_data_images"
-OUT_DIR = "/Users/eoghanhogan/Desktop/Stage 4 Sem 2/Deep Learning/Project1.nosync/Project1"
+DATA_DIR = "./preprocessed_data_images"
+OUT_DIR = "./"
 
 def main():
     OcularAugmenter(DATA_DIR, OUT_DIR, 256, invert=True, equalize=True, autocontrast=True, verbose=True)

@@ -6,7 +6,7 @@ Preprocess the data
 DATA_PATH should be the directory downloaded from kaggle
 """
 
-DATA_PATH = "../data.nosync"
+DATA_PATH = "./data"
 
 def main():
     Preproccessor(DATA_PATH, 0, 8000, verbose=True)
