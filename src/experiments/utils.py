@@ -45,7 +45,7 @@ def summarise_model(model, size, bs):
     return summ
 
 
-def test_model_on_one_batch(epochs, model, p, wrapped, m_kwargs, data_kwargs={}):
+def test_model_on_one_batch(epochs, model, p, wrapped, m_kwargs, data_kwargs):
     """
     Chcke how a model does on one batch of data (mostly used to check for bugs so as to not run entire training sessions)
     it is also used to see if a model can fit to the one batch of data
