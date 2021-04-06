@@ -4,7 +4,6 @@ from datetime import datetime
 import shutil
 import os
 
-
 def curr_time():
     ct = datetime.now().strftime("%Y%m%d%H%M%S")
     return ct

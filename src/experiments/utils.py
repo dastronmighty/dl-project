@@ -45,7 +45,7 @@ def summarise_model(model, size, bs):
     return summ
 
 
-def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
+def test_model_on_one_batch(epochs, model, p, wrapped, m_kwargs, data_kwargs={}):
     """
     Chcke how a model does on one batch of data (mostly used to check for bugs so as to not run entire training sessions)
     it is also used to see if a model can fit to the one batch of data
@@ -58,7 +58,7 @@ def test_model_on_one_batch(epochs, model, m_kwargs, p, wrapped):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using {device}")
     print("Loading Data...")
-    data = Data(p, wrapped_function=wrapped, device=device)
+    data = Data(p, wrapped_function=wrapped, device=device, **data_kwargs)
     x, y = next(iter(data.get_train_data()))
     mod = model(**m_kwargs)
     mod = mod.to(device)
