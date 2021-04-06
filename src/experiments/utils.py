@@ -18,7 +18,6 @@ import os
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
 
-
 def resize(x, s):
     """
     Resize X to s x s
@@ -84,14 +83,14 @@ def test_model_on_one_batch(epochs,
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using {device}")
-    data = Data(p, wrapped_function=wrapped, device=device, **data_args)
+    data = Data(p, wrapped_function=wrapped, device=device, **data_kwargs)
     x, y = next(iter(data.get_train_data()))
     mets = {
             "loss": [],
             "acc": [],
             "auc": []
         }
-    mod = model()
+    mod = model(**m_kwargs)
     mod = mod.to(device)
     opt = torch.optim.Adam(params=mod.parameters(), lr=0.0001)
     loss_func = torch.nn.BCELoss()
