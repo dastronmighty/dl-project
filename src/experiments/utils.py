@@ -9,14 +9,17 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torchvision import transforms
+from torchvision.transforms import functional
 
 from tqdm import tqdm
 
 from collections import OrderedDict
 import os
 
+
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
+
 
 def resize(x, s):
     """
@@ -25,7 +28,7 @@ def resize(x, s):
     :param s: size to resize to
     :return: x resized
     """
-    x = transforms.functional.resize(x, size=(s, s))
+    x = transforms.functional.resize(x, size=[s, s])
     return x
 
 
@@ -37,25 +40,13 @@ def get_pretrained_size_and_norm_wrapper(size):
     return lambda x, y: (normalize(resize(x, size)), y)
 
 
-def resize(x, y, s):
-    """
-    Resize X to s x s
-    :param x: 2d tensor to resize
-    :param y: labels
-    :param s: size to resize to
-    :return: x, y
-    """
-    x = transforms.functional.resize(x, size=(s, s))
-    return x, y
-
-
 def get_resize_wrapper(size):
     """
     a quick helper for making a wrapper function for resizing the data
     :param size: the size to resize to
     :return: a function that will resize X and give back x, y (as required)
     """
-    return lambda x, y: resize(x, y, size)
+    return lambda x, y: (resize(x, size), y)
 
 
 def summarise_model(model, size, bs):
