@@ -6,15 +6,36 @@ from src.utils.Logger import Logger
 
 import numpy as np
 
-from torchvision import transforms
 import torch
 import torch.nn as nn
+from torchvision import transforms
 
 from tqdm import tqdm
 
 from collections import OrderedDict
-
 import os
+
+normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+
+
+def resize(x, s):
+    """
+    Resize X to s x s
+    :param x: 2d tensor to resize
+    :param s: size to resize to
+    :return: x resized
+    """
+    x = transforms.functional.resize(x, size=(s, s))
+    return x
+
+
+def get_pretrained_size_and_norm_wrapper(size):
+    """
+    :param size: the size to resize to
+    :return: a function that will resize and norm X and give back x, y (as required)
+    """
+    return lambda x, y: (normalize(resize(x, size)), y)
 
 
 def resize(x, y, s):
@@ -45,31 +66,36 @@ def summarise_model(model, size, bs):
     return summ
 
 
-def test_model_on_one_batch(epochs, model, p, wrapped, m_kwargs, data_kwargs):
+def test_model_on_one_batch(epochs,
+                            model,
+                            p,
+                            wrapped,
+                            m_kwargs={},
+                            data_kwargs={"augmented": False}):
     """
-    Chcke how a model does on one batch of data (mostly used to check for bugs so as to not run entire training sessions)
+    Check how a model does on one batch of data (mostly used to check for bugs so as to not run entire training sessions)
     it is also used to see if a model can fit to the one batch of data
     :param epochs: number of Epochs to train for
     :param model: the model class to use
-    :param m_kwargs: the mosel arguments to use
     :param p: the path to the data
     :param wrapped: a function to use on the data if required (pass None if not)
+    :param m_kwargs: the model arguments to use
+    :param data_kwargs: the arguments to pass to the Data
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using {device}")
-    print("Loading Data...")
-    data = Data(p, wrapped_function=wrapped, device=device, **data_kwargs)
+    data = Data(p, wrapped_function=wrapped, device=device, **data_args)
     x, y = next(iter(data.get_train_data()))
-    mod = model(**m_kwargs)
-    mod = mod.to(device)
-    opt = torch.optim.Adam(params=mod.parameters(), lr=0.00025)
-    loss_func = torch.nn.BCELoss()
     mets = {
-        "loss": [],
-        "acc": [],
-        "auc": []
-    }
-    for i in tqdm(range(epochs), "epoch"):
+            "loss": [],
+            "acc": [],
+            "auc": []
+        }
+    mod = model()
+    mod = mod.to(device)
+    opt = torch.optim.Adam(params=mod.parameters(), lr=0.0001)
+    loss_func = torch.nn.BCELoss()
+    for i in range(epochs):
         y_hat = mod(x)
         y_hat = y_hat.flatten()
         loss = loss_func(y_hat, y.float())
@@ -79,7 +105,7 @@ def test_model_on_one_batch(epochs, model, p, wrapped, m_kwargs, data_kwargs):
         opt.zero_grad()
         mets["auc"].append(acc(y.detach().cpu().numpy(), y_hat.detach().cpu().numpy()))
         mets["acc"].append(auc(y.detach().cpu().numpy(), y_hat.detach().cpu().numpy()))
-        print(f"Loss = {mets['loss'][-1]} - acc = {mets['acc'][-1]} - auc = {mets['auc'][-1]}")
+        print(f"Epoch = {i} - Loss = {mets['loss'][-1]} - acc = {mets['acc'][-1]} - auc = {mets['auc'][-1]}")
     print("")
     print(f"Min loss reached {np.min(mets['loss'])} - reach on epoch {np.argmin(mets['loss'])}")
     print(f"Max accuracy reached {np.max(mets['acc'])} - reach on epoch {np.argmax(mets['acc'])}")
