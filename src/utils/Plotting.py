@@ -110,7 +110,7 @@ def dfs_from_logs(dir_name):
             df = rename_cols(df)
             all_logs[n] = df
     finals_df = finals_to_df(final_logs)
-    name = (dir_name.replace("Logs", "")).split("/")[-1]
+    name = (dir_name.split("/")[-1]
     return name, all_logs, finals_df
 
 
@@ -155,23 +155,24 @@ def gen_feature_collage(logs,
     :param main_font_size: the font size
     :return: the figure returned by matplot lib
     """
-    s = int(np.ceil(np.sqrt(len(logs))))
-    f, axs = plt.subplots(s, s, figsize=figsize)
-    for i, log in enumerate(logs.keys()):
-        epochs = [J for J in range(len(logs[log]))]
-        for fe in feats:
-            feat = logs[log][fe]
-            axs[i // s, i % s].plot(epochs, feat)
-        axs[i // s, i % s].legend(feats)
-        axs[i // s, i % s].set_title(f"{log} - {(' vs ').join(feats)}", fontsize=smol_font_size)
-        axs[i // s, i % s].set_xlabel('Epoch', fontsize=smol_font_size)
-        axs[i // s, i % s].set_ylabel("Score", fontsize=smol_font_size)
-    for i in range(len(list(logs.keys())), (s * s)):
-        axs[i // s, i % s].axis('off')
-    title_name = list(logs.keys())[0].split("_")[0]
-    f.suptitle(f"{title_name} - {(' vs ').join(feats)}", fontsize=main_font_size)
-    f.savefig(f"{save_to}/collage_{title_name}_{('_vs_').join(feats)}")
-    return f
+    if len(logs.keys()) > 1:
+        s = int(np.ceil(np.sqrt(len(logs))))
+        f, axs = plt.subplots(s, s, figsize=figsize)
+        for i, log in enumerate(logs.keys()):
+            epochs = [J for J in range(len(logs[log]))]
+            for fe in feats:
+                feat = logs[log][fe]
+                axs[i // s, i % s].plot(epochs, feat)
+            axs[i // s, i % s].legend(feats)
+            axs[i // s, i % s].set_title(f"{log} - {(' vs ').join(feats)}", fontsize=smol_font_size)
+            axs[i // s, i % s].set_xlabel('Epoch', fontsize=smol_font_size)
+            axs[i // s, i % s].set_ylabel("Score", fontsize=smol_font_size)
+        for i in range(len(list(logs.keys())), (s * s)):
+            axs[i // s, i % s].axis('off')
+        title_name = list(logs.keys())[0].split("_")[0]
+        f.suptitle(f"{title_name} - {(' vs ').join(feats)}", fontsize=main_font_size)
+        f.savefig(f"{save_to}/collage_{title_name}_{('_vs_').join(feats)}")
+        return f
 
 
 def gen_feature_pics(log_dict, feats, save_to=".", **kwargs):
