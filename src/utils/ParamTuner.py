@@ -115,13 +115,13 @@ class ParamTuner:
 
         loss_func = losses[0]()
         test_ckps(data_dir=self.DATA_DIR,
-              auged=True,
+              auged=self.augmented,
               ckp_dir=self.CKP_DIR,
               log_dir=self.LOG_DIR,
-              model=model_class,
+              model=self.model_class,
               model_kwargs=self.model_kwargs,
               mets=metrics_to_use,
-              device="cpu",
+              device=self.device,
               loss_func=loss_func,
               total_amt=self.total_amt,
               val_percent=self.val_percent,
