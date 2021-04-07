@@ -1,7 +1,7 @@
 import torch
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
-from src.utils.ParamTuner import ParamTuner
+from src.utils.ParamTuner import ParamTuner, init_folder
 
 
 def RunExpt(expt_name,
@@ -53,13 +53,16 @@ def RunExpt(expt_name,
         "low_fpr_thresh": lowest_fpr_thresh
     }
 
+    log_dir = init_folder(f"{expt_name}_params", directories["log"], True)
+    ckp_dir = init_folder(f"{expt_name}_params", directories["ckp"], True)
+
     tune = ParamTuner(expt_name,
                       model,
                       metrics_dict,
                       "auc",
                       directories["data"],
-                      directories["log"],
-                      directories["ckp"],
+                      log_dir,
+                      ckp_dir,
                       augmented,
                       model_kwargs=model_kwargs,
                       learning_rates=lrs,
