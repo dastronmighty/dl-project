@@ -110,7 +110,7 @@ def dfs_from_logs(dir_name):
             df = rename_cols(df)
             all_logs[n] = df
     finals_df = finals_to_df(final_logs)
-    name = (dir_name.split("/")[-1]
+    name = dir_name.split("/")[-1]
     return name, all_logs, finals_df
 
 
