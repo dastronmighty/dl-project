@@ -2,8 +2,9 @@ import torch
 
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
-from src.utils.utils import init_folder
-
+from src.utils.utils import init_folder, make_folder_if_not_there
+from src.utils.Plotting import make_plot
+import os
 
 def RunExpt(expt_name,
             model,
@@ -54,8 +55,8 @@ def RunExpt(expt_name,
         "low_fpr_thresh": lowest_fpr_thresh
     }
 
-    log_dir = init_folder(f"{expt_name}_params", directories["log"], True)
-    ckp_dir = init_folder(f"{expt_name}_params", directories["ckp"], True)
+    log_dir = init_folder(f"{expt_name}", directories["log"], True)
+    ckp_dir = init_folder(f"{expt_name}", directories["ckp"], True)
 
     tune = ParamTuner(expt_name,
                       model,
@@ -81,5 +82,12 @@ def RunExpt(expt_name,
 
     print(f"HYPER-PARAM OUTPUT: {tune.trials}")
     print(f"EXPERIMENT {expt_name} FINISHED")
+
+    print("PLOTTING!")
+    cwd = os.getcwd()
+    fig_dir = make_folder_if_not_there("figs", cwd)
+    tuned_fig_dir = init_folder(expt_name, fig_dir, True)
+    make_plot(log_dir, tuned_fig_dir)
+
 
     torch.cuda.empty_cache()

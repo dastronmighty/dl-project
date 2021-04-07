@@ -247,3 +247,19 @@ def get_log_dirs(p):
     :return: the list of log directorys
     """
     return [f"{p}/{_}" for _ in os.listdir(p) if "log" in _.lower()]
+
+
+def make_plot(directory, save_to):
+    name, all_logs, finals_df = dfs_from_logs(directory)
+    features_to_plot = [
+        ["Train Loss", "Validation Loss"],
+        ["Train auc", "Validation auc"],
+        ["Train acc", "Validation acc"],
+        ["Train Loss", "Validation Loss",
+         "Train auc", "Validation auc",
+         "Train acc", "Validation acc"]
+    ]
+    for feats_to_plt in features_to_plot:
+        gen_feature_pics(all_logs, feats_to_plt, save_to=save_to)
+        f = gen_feature_collage(all_logs, feats_to_plt, save_to=save_to, smol_font_size=10, figsize=(25, 25))
+        f = gen_final_hist(name, finals_df, save_to=save_to)
