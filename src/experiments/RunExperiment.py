@@ -84,10 +84,10 @@ def RunExpt(expt_name,
     print(f"EXPERIMENT {expt_name} FINISHED")
 
     print("PLOTTING!")
+
     cwd = os.getcwd()
     fig_dir = make_folder_if_not_there("figs", cwd)
     tuned_fig_dir = init_folder(expt_name, fig_dir, True)
     make_plot(log_dir, tuned_fig_dir)
-
 
     torch.cuda.empty_cache()

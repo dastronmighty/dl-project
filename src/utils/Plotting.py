@@ -5,6 +5,8 @@ import numpy as np
 
 from matplotlib import pylab as plt
 
+import re
+
 
 def rename_cols(df_):
     """
@@ -29,6 +31,7 @@ def log_to_df(file_name, test_str=""):
     :param test_str: a variable you are able to pass in to test each log line whether it should be parsed or not if the test string is in it
     :return: the name of the model and the Dataframe
     """
+    regex = re.compile("\s\d+.\d+e[-]?[+]?\d+\s")
     text = ""
     name = file_name.split("/")[-1].replace(".txt", "")
     with open(file_name) as f:
@@ -36,14 +39,17 @@ def log_to_df(file_name, test_str=""):
     lines = text.split("\n")
     log_arr_dict = []
     for l in lines:
-        if test_str in l.lower():
-            g = {}
-            for f in l.split("-"):
-                if ":" in f:
-                    fn = f.split(":")[0].strip()
-                    fv = float(f.split(":")[1].strip())
-                    g[fn] = fv
-            log_arr_dict.append(g)
+        if l != "":
+            for i in regex.findall(l):
+                l = l.replace(i, "{:f}".format(float(i)))
+            if test_str in l.lower():
+                g = {}
+                for f in l.split("-"):
+                    if ":" in f:
+                        fn = f.split(":")[0].strip()
+                        fv = float(f.split(":")[1].strip())
+                        g[fn] = fv
+                log_arr_dict.append(g)
     return name, pd.DataFrame(log_arr_dict)
 
 
