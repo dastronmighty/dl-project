@@ -1,5 +1,6 @@
 from torch import nn
 import torchvision.models as models
+import torch
 
 class PretrainedInceptionV3(nn.Module):
 

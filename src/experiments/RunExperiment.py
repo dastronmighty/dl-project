@@ -1,10 +1,13 @@
-import torch
-
 from src.utils.testmodelutils import test_models_on_batch_and_show
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
 from src.utils.utils import init_folder, make_folder_if_not_there
 from src.utils.Plotting import make_plot
+
+from src.experiments.utils import get_resize_wrapper, get_pretrained_size_and_norm_wrapper
+
+import torch
+
 import os
 
 
@@ -100,3 +103,108 @@ def RunExpt(expt_name,
     test_models_on_batch_and_show(expt_name, test_data_path, ckp_dir, model, model_kwargs, dev=DEVICE, wrapped=wrapper)
 
     torch.cuda.empty_cache()
+
+
+def base_experiment(name,
+                    model,
+                    directories,
+                    workers,
+                    model_kwargs,
+                    aug,
+                    wrapper=None,
+                    lrs=[0.1, 0.01, 0.001, 0.0001],
+                    bss=[32, 64],
+                    opts=[torch.optim.Adam],
+                    losses=[torch.nn.BCELoss],
+                    **kwargs):
+    """
+    Run a single experiment
+    :param name: name of experiment
+    :param model: the class of the model to use
+    :param directories: a dictionary of the data, logs, and checkpoints
+    :param workers: the number of workers to use for data loading
+    :param model_kwargs: the arguments to pass to the model when initialized
+    :param aug: wether ot not the data is augmented
+    :param wrapper: Wrapper required
+    :param lrs: The learning rates to try
+    :param bss: The Batch Sizes to try
+    :param opts: The Optimizers to try
+    :param losses: The Loss Functions to try
+    :param kwargs: the optional kwargs to pass to the param tuner
+    """
+    RunExpt(f"{name}_EXPT",
+            model,
+            model_kwargs,
+            100,
+            directories,
+            aug,
+            wrapper,
+            lrs=lrs,
+            bss=bss,
+            opts=opts,
+            losses=losses,
+            workers=workers,
+            save_every=2,
+            train_early_stopping=False,
+            test_early_stopping=True
+            **kwargs)
+
+
+def regular_experiemnt(name,
+                    model,
+                    directories,
+                    size,
+                    workers,
+                    model_kwargs,
+                    aug,
+                    lrs=[0.1, 0.01, 0.001, 0.0001],
+                    bss=[32, 64],
+                    opts=[torch.optim.Adam],
+                    losses=[torch.nn.BCELoss],
+                    **kwargs):
+    """
+    Run a single experiment on an untrained model
+    :param name: name of experiment
+    :param model: the class of the model to use
+    :param directories: a dictionary of the data, logs, and checkpoints
+    :param workers: the number of workers to use for data loading
+    :param model_kwargs: the arguments to pass to the model when initialized
+    :param aug: wether ot not the data is augmented
+    :param lrs: The learning rates to try
+    :param bss: The Batch Sizes to try
+    :param opts: The Optimizers to try
+    :param losses: The Loss Functions to try
+    :param kwargs: the optional kwargs to pass to the param tuner
+    """
+    wrapper = get_resize_wrapper(size)
+    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts, losses=losses, **kwargs)
+
+
+def pretrained_experiemnt(name,
+                    model,
+                    directories,
+                    size,
+                    workers,
+                    model_kwargs,
+                    aug,
+                    lrs=[0.1, 0.01, 0.001, 0.0001],
+                    bss=[32, 64],
+                    opts=[torch.optim.Adam],
+                    losses=[torch.nn.BCELoss],
+                    **kwargs):
+    """
+    Run a single experiment on a pretrained model
+    :param name: name of experiment
+    :param model: the class of the model to use
+    :param directories: a dictionary of the data, logs, and checkpoints
+    :param workers: the number of workers to use for data loading
+    :param model_kwargs: the arguments to pass to the model when initialized
+    :param aug: wether ot not the data is augmented
+    :param lrs: The learning rates to try
+    :param bss: The Batch Sizes to try
+    :param opts: The Optimizers to try
+    :param losses: The Loss Functions to try
+    :param kwargs: the optional kwargs to pass to the param tuner
+    """
+    wrapper = get_pretrained_size_and_norm_wrapper(size)
+    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts, losses=losses, **kwargs)
