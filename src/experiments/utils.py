@@ -1,10 +1,10 @@
 from src.Data.Data import Data
 from src.utils.Metrics import auc, acc
-from src.utils.Plotting import show_test_on_images
-from src.utils.datautils import sample_from_data_loader
 from src.utils.testmodelutils import test_model
 from src.utils.Checkpoint import load_ckp
 from src.utils.Logger import Logger
+
+from tqdm import tqdm
 
 import numpy as np
 
@@ -13,13 +13,9 @@ import torch.nn as nn
 from torchvision import transforms
 from torchvision.transforms import functional
 
-from tqdm import tqdm
 
 from collections import OrderedDict
 import os
-
-from src.utils.utils import get_final_ckps
-
 
 mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
 std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
@@ -235,6 +231,30 @@ def summary_string(model, input_size, batch_size=-1, device=torch.device('cpu'),
     # return summary
     return summary_str, (total_params, trainable_params)
 
+def test_model_checkpoint(ckp_path, model_class, model_kwargs, resize_size, data_path):
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    wrapper = get_resize_wrapper(resize_size)
+    print("Loading Data...")
+    data = Data(data_path,
+                augmented=True,
+                device=dev,
+                batch_size=32,
+                wrapped_function=wrapper,
+                verbose=True)
+    print("Loading Model...")
+    mod = model_class(**model_kwargs)
+    mod, _ = load_ckp(ckp_path, mod)
+    print("Predicting...")
+    aucs = []
+    accs = []
+    for xb, yb in tqdm(data.get_test_data()):
+        ypredb = mod(xb).flatten().cpu().detach().numpy()
+        yb = yb.float().cpu().detach().numpy()
+        aucs.append(auc(yb, ypredb))
+        accs.append(acc(yb, ypredb))
+    return np.mean(aucs), np.mean(accs)
+
+
 
 def test_ckps(data_dir,
               auged,
@@ -297,61 +317,10 @@ def test_ckps(data_dir,
                     name = name.replace("_FINAL.pt", "")
                     test_model(test_data, mod, loss_func, logger, name)
 
-def test_model_checkpoint(ckp_path, model_class, model_kwargs, resize_size, data_path):
-    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    wrapper = get_resize_wrapper(resize_size)
-    print("Loading Data...")
-    data = Data(data_path,
-                augmented=True,
-                device=dev,
-                batch_size=32,
-                wrapped_function=wrapper,
-                verbose=True)
-    print("Loading Model...")
-    mod = model_class(**model_kwargs)
-    mod, _ = load_ckp(ckp_path, mod)
-    print("Predicting...")
-    aucs = []
-    accs = []
-    for xb, yb in tqdm(data.get_test_data()):
-        ypredb = mod(xb).flatten().cpu().detach().numpy()
-        yb = yb.float().cpu().detach().numpy()
-        aucs.append(auc(yb, ypredb))
-        accs.append(acc(yb, ypredb))
-    return np.mean(aucs), np.mean(accs)
 
 
-def test_models_on_batch_and_show(expt_name,
-                                  data_path,
-                                  ckps_path,
-                                  model_class,
-                                  model_kwargs,
-                                  dev=torch.device("cpu"),
-                                  wrapped=None,
-                                  rows=3,
-                                  cols=3,
-                                  seed=42):
-    fin_ckps = get_final_ckps(ckps_path)
-    for ckp in fin_ckps:
-        show_test_on_images(expt_name,
-                            data_path,
-                            ckp, model_class,
-                            model_kwargs,
-                            dev=dev,
-                            wrapped=wrapped,
-                            rows=rows,
-                            cols=cols,
-                            seed=seed)
 
 
-def get_test_64batch_from_path(path, wrapped=None, dev="cpu", seed=42):
-    data = Data(path,
-                augmented=False,
-                workers=0,
-                device=dev,
-                test_amt=1000,
-                batch_size=64,
-                wrapped_function=wrapped,
-                seed=seed)
-    x, y = sample_from_data_loader(data.get_test_data())
-    return x, y
+
+
+

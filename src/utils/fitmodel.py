@@ -1,9 +1,9 @@
 import numpy as np
 from tqdm import tqdm
 import torch
-import random
 
 from src.utils.utils import set_seed
+
 
 class FitModel:
 

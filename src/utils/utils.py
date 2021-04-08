@@ -16,6 +16,7 @@ def set_seed(seed):
     numpy.random.seed(seed)
     random.seed(seed)
 
+
 def curr_time():
     ct = datetime.now().strftime("%Y%m%d%H%M%S")
     return ct
@@ -79,13 +80,3 @@ def make_folder_if_not_there(name, path):
         os.mkdir(f"{path}/{name}")
     return f"{path}/{name}"
 
-def get_final_ckps(dir_name):
-    ckps = []
-    for _ in os.listdir(dir_name):
-        p = f"{dir_name}/{_}"
-        if os.path.isdir(p):
-            u_ps = get_final_ckps(p)
-            ckps += u_ps
-        elif ".pt" in p and ("final" in p.lower()):
-            ckps.append(p)
-    return ckps

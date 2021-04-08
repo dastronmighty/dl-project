@@ -1,6 +1,6 @@
 import torch
 
-from src.experiments.utils import test_models_on_batch_and_show
+from src.utils.testmodelutils import test_models_on_batch_and_show
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
 from src.utils.utils import init_folder, make_folder_if_not_there
