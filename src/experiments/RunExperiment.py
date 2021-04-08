@@ -146,27 +146,28 @@ def base_experiment(name,
             workers=workers,
             save_every=2,
             train_early_stopping=False,
-            test_early_stopping=True
+            test_early_stopping=True,
             **kwargs)
 
 
-def regular_experiemnt(name,
-                    model,
-                    directories,
-                    size,
-                    workers,
-                    model_kwargs,
-                    aug,
-                    lrs=[0.1, 0.01, 0.001, 0.0001],
-                    bss=[32, 64],
-                    opts=[torch.optim.Adam],
-                    losses=[torch.nn.BCELoss],
-                    **kwargs):
+def regular_experiment(name,
+                       model,
+                       directories,
+                       size,
+                       workers,
+                       model_kwargs,
+                       aug,
+                       lrs=[0.1, 0.01, 0.001, 0.0001],
+                       bss=[32, 64],
+                       opts=[torch.optim.Adam],
+                       losses=[torch.nn.BCELoss],
+                       **kwargs):
     """
     Run a single experiment on an untrained model
     :param name: name of experiment
     :param model: the class of the model to use
     :param directories: a dictionary of the data, logs, and checkpoints
+    :param size: size to resize samples to
     :param workers: the number of workers to use for data loading
     :param model_kwargs: the arguments to pass to the model when initialized
     :param aug: wether ot not the data is augmented
@@ -177,26 +178,28 @@ def regular_experiemnt(name,
     :param kwargs: the optional kwargs to pass to the param tuner
     """
     wrapper = get_resize_wrapper(size)
-    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts, losses=losses, **kwargs)
+    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts,
+                    losses=losses, **kwargs)
 
 
-def pretrained_experiemnt(name,
-                    model,
-                    directories,
-                    size,
-                    workers,
-                    model_kwargs,
-                    aug,
-                    lrs=[0.1, 0.01, 0.001, 0.0001],
-                    bss=[32, 64],
-                    opts=[torch.optim.Adam],
-                    losses=[torch.nn.BCELoss],
-                    **kwargs):
+def pretrained_experiment(name,
+                          model,
+                          directories,
+                          size,
+                          workers,
+                          model_kwargs,
+                          aug,
+                          lrs=[0.1, 0.01, 0.001, 0.0001],
+                          bss=[32, 64],
+                          opts=[torch.optim.Adam],
+                          losses=[torch.nn.BCELoss],
+                          **kwargs):
     """
     Run a single experiment on a pretrained model
     :param name: name of experiment
     :param model: the class of the model to use
     :param directories: a dictionary of the data, logs, and checkpoints
+    :param size: size to resize samples to
     :param workers: the number of workers to use for data loading
     :param model_kwargs: the arguments to pass to the model when initialized
     :param aug: wether ot not the data is augmented
@@ -207,4 +210,5 @@ def pretrained_experiemnt(name,
     :param kwargs: the optional kwargs to pass to the param tuner
     """
     wrapper = get_pretrained_size_and_norm_wrapper(size)
-    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts, losses=losses, **kwargs)
+    base_experiment(name, model, directories, workers, model_kwargs, aug, wrapper, lrs=lrs, bss=bss, opts=opts,
+                    losses=losses, **kwargs)
