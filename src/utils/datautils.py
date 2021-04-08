@@ -6,8 +6,6 @@ import os
 
 from torch.utils.data import Dataset
 
-from src.Data.Data import Data
-
 
 def seed_worker(worker_id):
     """
@@ -94,17 +92,4 @@ def get_jpgs_from_path(path):
 def sample_from_data_loader(data_loader):
     # sample one batch from a dataloader
     return next(iter(data_loader))
-
-
-def get_test_64batch_from_path(path, wrapped=None, dev="cpu", seed=42):
-    data = Data(path,
-                augmented=False,
-                workers=0,
-                device=dev,
-                test_amt=1000,
-                batch_size=64,
-                wrapped_function=wrapped,
-                seed=seed)
-    x, y = sample_from_data_loader(data.get_test_data())
-    return x, y
 

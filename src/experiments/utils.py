@@ -1,6 +1,7 @@
 from src.Data.Data import Data
 from src.utils.Metrics import auc, acc
 from src.utils.Plotting import show_test_on_images
+from src.utils.datautils import sample_from_data_loader
 from src.utils.testmodelutils import test_model
 from src.utils.Checkpoint import load_ckp
 from src.utils.Logger import Logger
@@ -19,12 +20,14 @@ import os
 
 from src.utils.utils import get_final_ckps
 
+
 mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
 std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
 
 normalize = transforms.Normalize(mean.tolist(), std.tolist())
 
 de_normalize = transforms.Normalize((-mean / std).tolist(), (1.0 / std).tolist())
+
 
 def resize(x, s):
     """
@@ -339,3 +342,15 @@ def test_models_on_batch_and_show(expt_name,
                             rows=rows,
                             cols=cols,
                             seed=seed)
+
+def get_test_64batch_from_path(path, wrapped=None, dev="cpu", seed=42):
+    data = Data(path,
+                augmented=False,
+                workers=0,
+                device=dev,
+                test_amt=1000,
+                batch_size=64,
+                wrapped_function=wrapped,
+                seed=seed)
+    x, y = sample_from_data_loader(data.get_test_data())
+    return x, y
