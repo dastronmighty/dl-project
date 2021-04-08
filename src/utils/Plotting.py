@@ -9,7 +9,7 @@ from matplotlib import pylab as plt
 import re
 
 from src.utils.Checkpoint import load_ckp
-from src.utils.datautils import get_test_64batch_from_path
+from src.experiments.utils import get_test_64batch_from_path
 from src.utils.utils import tensorToLabels
 
 

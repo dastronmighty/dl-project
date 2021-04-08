@@ -343,6 +343,7 @@ def test_models_on_batch_and_show(expt_name,
                             cols=cols,
                             seed=seed)
 
+
 def get_test_64batch_from_path(path, wrapped=None, dev="cpu", seed=42):
     data = Data(path,
                 augmented=False,
