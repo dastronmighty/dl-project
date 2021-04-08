@@ -144,7 +144,7 @@ def base_experiment(name,
             opts=opts,
             losses=losses,
             workers=workers,
-            save_every=2,
+            save_every=10,
             train_early_stopping=False,
             test_early_stopping=True,
             **kwargs)
