@@ -22,7 +22,7 @@ def get_pretrained_ResNet(rn_type, classes):
     for param in model.parameters():
         param.requires_grad = False
     model.fc = torch.nn.Sequential(
-        nn.Linear(2048, 1, bias=True),
+        nn.Linear(model.fc.in_features, classes, bias=True),
         nn.Sigmoid()
     )
     return model
