@@ -2,10 +2,15 @@ import os
 
 import pandas as pd
 import numpy as np
+import torch
 
 from matplotlib import pylab as plt
 
 import re
+
+from src.utils.Checkpoint import load_ckp
+from src.utils.datautils import get_test_64batch_from_path
+from src.utils.utils import tensorToLabels
 
 
 def rename_cols(df_):
@@ -269,3 +274,48 @@ def make_plot(directory, save_to):
         gen_feature_pics(all_logs, feats_to_plt, save_to=save_to)
         f = gen_feature_collage(all_logs, feats_to_plt, save_to=save_to, smol_font_size=10, figsize=(25, 25))
         f = gen_final_hist(name, finals_df, save_to=save_to)
+
+def show_test_on_images(expt_name,
+                        data_path,
+                        ckp_path,
+                        model_class,
+                        model_kwargs,
+                        dev=torch.device("cpu"),
+                        wrapped=None,
+                        rows=3,
+                        cols=3,
+                        seed=42):
+        num_images = rows * cols
+        print("Loading Data...")
+        x1, y1 = get_test_64batch_from_path(data_path, wrapped, dev, seed=seed)
+        x2, y2 = get_test_64batch_from_path(data_path, seed=seed)
+        print("Loading Model...")
+        mod = model_class(**model_kwargs)
+        mod, _ = load_ckp(ckp_path, mod)
+        mod.to(dev)
+        print("Predicting...")
+        preds = mod(x1)
+        predictions = ((preds > 0.5) * 1)
+        predictions = predictions.flatten()
+        peqy = ((y1 == predictions) * 1)
+        idx = []
+        for i in range((len(peqy) - num_images)):
+            idx.append(peqy[i:i + num_images].sum().item())
+        fidx = np.argmax(idx)
+        x1, y1 = x1[fidx:fidx + num_images], y1[fidx:fidx + num_images]
+        predictions = predictions[fidx:fidx + num_images].flatten()
+        print("Plotting...")
+        f, axs = plt.subplots(rows, cols, figsize=((5 * cols), (5 * rows)))
+        pred_labels, true_labels = tensorToLabels(predictions), tensorToLabels(y1)
+        x2, y2 = x2[fidx:fidx + num_images], y2[fidx:fidx + num_images]
+        for i, single in enumerate(x2):
+            im = (single.permute(1, 2, 0)).int()
+            idx1, idx2 = i // cols, i % cols
+            axs[idx1, idx2].imshow(im)
+            axs[idx1, idx2].set_title(f"Predicted {pred_labels[i]} - Actual {true_labels[i]}")
+            axs[idx1, idx2].axis('off')
+        name = ckp_path.split("/")[-1].replace("_FINAL", "")
+        name = name.replace(".pt", "")
+        f.suptitle(f"{name} Predictions", fontsize=30)
+        f.savefig(f"figs/{expt_name}/{name}_predictions")
+        print("Done!")

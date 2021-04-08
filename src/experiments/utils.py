@@ -1,5 +1,6 @@
 from src.Data.Data import Data
 from src.utils.Metrics import auc, acc
+from src.utils.Plotting import show_test_on_images
 from src.utils.testmodelutils import test_model
 from src.utils.Checkpoint import load_ckp
 from src.utils.Logger import Logger
@@ -15,6 +16,8 @@ from tqdm import tqdm
 
 from collections import OrderedDict
 import os
+
+from src.utils.utils import get_final_ckps
 
 mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
 std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
@@ -314,3 +317,25 @@ def test_model_checkpoint(ckp_path, model_class, model_kwargs, resize_size, data
         accs.append(acc(yb, ypredb))
     return np.mean(aucs), np.mean(accs)
 
+
+def test_models_on_batch_and_show(expt_name,
+                                  data_path,
+                                  ckps_path,
+                                  model_class,
+                                  model_kwargs,
+                                  dev=torch.device("cpu"),
+                                  wrapped=None,
+                                  rows=3,
+                                  cols=3,
+                                  seed=42):
+    fin_ckps = get_final_ckps(ckps_path)
+    for ckp in fin_ckps:
+        show_test_on_images(expt_name,
+                            data_path,
+                            ckp, model_class,
+                            model_kwargs,
+                            dev=dev,
+                            wrapped=wrapped,
+                            rows=rows,
+                            cols=cols,
+                            seed=seed)

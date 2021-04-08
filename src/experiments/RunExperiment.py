@@ -1,10 +1,12 @@
 import torch
 
+from src.experiments.utils import test_models_on_batch_and_show
 from src.utils.Metrics import auc, acc, highest_tpr_thresh, lowest_fpr_thresh
 from src.utils.ParamTuner import ParamTuner
 from src.utils.utils import init_folder, make_folder_if_not_there
 from src.utils.Plotting import make_plot
 import os
+
 
 def RunExpt(expt_name,
             model,
@@ -89,5 +91,12 @@ def RunExpt(expt_name,
     fig_dir = make_folder_if_not_there("figs", cwd)
     tuned_fig_dir = init_folder(expt_name, fig_dir, True)
     make_plot(log_dir, tuned_fig_dir)
+
+    test_data_path = ""
+    if "test" in directories.keys():
+        test_data_path = directories["test"]
+    else:
+        test_data_path = directories["data"]
+    test_models_on_batch_and_show(expt_name, test_data_path, ckp_dir, model, model_kwargs, dev=DEVICE, wrapped=wrapper)
 
     torch.cuda.empty_cache()
