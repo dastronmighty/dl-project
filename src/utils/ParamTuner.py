@@ -140,6 +140,9 @@ class ParamTuner:
         :param LOSS: Loss Function
         :return: The final metric to optimise score from the training
         """
+        torch.manual_seed(self.seed)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
 
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"
         NAME += f"_{BATCH_SIZE}"

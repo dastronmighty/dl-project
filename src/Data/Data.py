@@ -3,6 +3,8 @@ from torch.utils.data import DataLoader
 from src.utils.datautils import WrappedDataLoader, CustomDataset, mount_to_device, seed_worker, get_jpgs_from_path
 from tqdm import tqdm
 import torch
+import numpy as np
+
 
 class Data:
 
@@ -36,7 +38,9 @@ class Data:
         self.batch_size = batch_size
         self.workers = workers
         self.verbose = verbose
+        torch.manual_seed(seed)
         random.seed(seed)
+        np.random.seed(seed)
 
         self.wrapped_function = lambda x, y: mount_to_device(x, y, self.device)
         if wrapped_function is not None:
