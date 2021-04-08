@@ -38,9 +38,9 @@ class ParamTuner:
                  WORKERS=0,
                  verbose=False,
                  overwrite=False,
-                 train_early_stopping=True,
+                 train_early_stopping=False,
                  test_early_stopping=True,
-                 early_stopping_attention=4,
+                 early_stopping_attention=6,
                  seed=42):
         """
         This was a class made for the purposes of hyperparameter tuning to wrap everything together
