@@ -9,7 +9,7 @@ from matplotlib import pylab as plt
 import re
 
 from src.utils.Checkpoint import load_ckp
-from src.experiments.utils import get_test_64batch_from_path
+from src.utils.testmodelutils import get_test_64batch_from_path
 from src.utils.utils import tensorToLabels
 
 
@@ -274,6 +274,7 @@ def make_plot(directory, save_to):
         gen_feature_pics(all_logs, feats_to_plt, save_to=save_to)
         f = gen_feature_collage(all_logs, feats_to_plt, save_to=save_to, smol_font_size=10, figsize=(25, 25))
         f = gen_final_hist(name, finals_df, save_to=save_to)
+
 
 def show_test_on_images(expt_name,
                         data_path,
