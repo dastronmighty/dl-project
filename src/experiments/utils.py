@@ -1,4 +1,5 @@
 from src.Data.Data import Data
+
 from src.utils.Metrics import auc, acc
 from src.utils.testmodelutils import test_model
 from src.utils.Checkpoint import load_ckp
@@ -253,7 +254,6 @@ def test_model_checkpoint(ckp_path, model_class, model_kwargs, resize_size, data
         aucs.append(auc(yb, ypredb))
         accs.append(acc(yb, ypredb))
     return np.mean(aucs), np.mean(accs)
-
 
 
 def test_ckps(data_dir,
