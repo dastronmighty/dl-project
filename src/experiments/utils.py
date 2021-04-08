@@ -16,10 +16,12 @@ from tqdm import tqdm
 from collections import OrderedDict
 import os
 
+mean = torch.tensor([0.485, 0.456, 0.406], dtype=torch.float32)
+std = torch.tensor([0.229, 0.224, 0.225], dtype=torch.float32)
 
-normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
+normalize = transforms.Normalize(mean.tolist(), std.tolist())
 
+de_normalize = transforms.Normalize((-mean / std).tolist(), (1.0 / std).tolist())
 
 def resize(x, s):
     """
