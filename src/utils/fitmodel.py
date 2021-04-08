@@ -31,7 +31,7 @@ class FitModel:
         :param verbose: the verbosity of training
         :param seed: the seed to use for reproducibility
         """
-        set_seed(self.seed)
+        set_seed(seed)
         self.train_dl = data.get_train_data()
         self.val_dl = data.get_val_data()
         self.loss_func = loss_func
