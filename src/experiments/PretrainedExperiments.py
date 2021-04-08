@@ -2,7 +2,7 @@ from src.experiments.RunExperiment import pretrained_experiemnt
 
 from src.models.pretrained.PretrainedInception import PretrainedInceptionV3
 from src.models.pretrained.PretrainedVGG import *
-from src.models.pretrained.PretrainedExperimentResNet import *
+from src.models.pretrained.PretrainedResNet import *
 
 
 def PretrainedExperimentVGG11(directories, workers, aug, **kwargs):
