@@ -9,6 +9,9 @@ import numpy as np
 
 import torch
 
+from src.utils.utils import set_seed
+
+
 class ParamTuner:
 
     def __init__(self,
@@ -66,14 +69,10 @@ class ParamTuner:
         :param overwrite: whether to overwrite previous experiments with the same name
         :param seed: a seed for reproducibility
         """
-
-        torch.manual_seed(seed)
-        random.seed(seed)
-        np.random.seed(seed)
-
         self.augmented = augmented
 
         self.seed = seed
+        set_seed(self.seed)
 
         self.name = Name
         self.model_class = model_class
@@ -140,9 +139,7 @@ class ParamTuner:
         :param LOSS: Loss Function
         :return: The final metric to optimise score from the training
         """
-        torch.manual_seed(self.seed)
-        random.seed(self.seed)
-        np.random.seed(self.seed)
+        set_seed(self.seed)
 
         NAME = f"{self.name}_{str(LR).replace('.', '_')}"
         NAME += f"_{BATCH_SIZE}"

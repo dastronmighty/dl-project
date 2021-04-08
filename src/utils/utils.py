@@ -4,6 +4,18 @@ from datetime import datetime
 import shutil
 import os
 
+import torch
+import random
+import numpy
+
+
+def set_seed(seed):
+    torch.backends.cudnn.deterministic = True
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    numpy.random.seed(seed)
+    random.seed(seed)
+
 def curr_time():
     ct = datetime.now().strftime("%Y%m%d%H%M%S")
     return ct

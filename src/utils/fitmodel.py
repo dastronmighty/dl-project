@@ -3,6 +3,7 @@ from tqdm import tqdm
 import torch
 import random
 
+from src.utils.utils import set_seed
 
 class FitModel:
 
@@ -30,12 +31,9 @@ class FitModel:
         :param verbose: the verbosity of training
         :param seed: the seed to use for reproducibility
         """
-        torch.manual_seed(seed)
-        random.seed(seed)
-        np.random.seed(seed)
+        set_seed(self.seed)
         self.train_dl = data.get_train_data()
         self.val_dl = data.get_val_data()
-
         self.loss_func = loss_func
 
         model = model.to(dev)

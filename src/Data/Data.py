@@ -5,6 +5,8 @@ from tqdm import tqdm
 import torch
 import numpy as np
 
+from src.utils.utils import set_seed
+
 
 class Data:
 
@@ -38,9 +40,8 @@ class Data:
         self.batch_size = batch_size
         self.workers = workers
         self.verbose = verbose
-        torch.manual_seed(seed)
-        random.seed(seed)
-        np.random.seed(seed)
+        self.seed = seed
+        set_seed(self.seed)
 
         self.wrapped_function = lambda x, y: mount_to_device(x, y, self.device)
         if wrapped_function is not None:
@@ -202,6 +203,7 @@ class Data:
         Get the Training Data Loader
         :return: The Wrapped Data Loader
         """
+        set_seed(self.seed)
         data = CustomDataset(self.train_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
@@ -215,6 +217,7 @@ class Data:
         Get the Validation Data Loader
         :return: The Wrapped Data Loader
         """
+        set_seed(self.seed)
         data = CustomDataset(self.val_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
@@ -228,6 +231,7 @@ class Data:
         Get the Testing Data Loader
         :return: The Wrapped Data Loader
         """
+        set_seed(self.seed)
         data = CustomDataset(self.test_files)
         dl = DataLoader(data,
                         batch_size=self.batch_size,
