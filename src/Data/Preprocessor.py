@@ -57,7 +57,7 @@ class Preproccessor:
         :param p: the path where to save to
         """
         labels = self.get_labels(df)
-        self.load_and_process_arr(df["path"], labels, n)
+        self.load_and_process_arr(df["path"], labels, p)
 
 
     def get_labels(self, df):

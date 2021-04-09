@@ -10,3 +10,5 @@ jupyter
 ipykernel
 hiddenlayer
 Pillow
+scipy
+scikit-image

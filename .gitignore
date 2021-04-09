@@ -13,3 +13,9 @@ data
 data
 figs
 DeepLearningProjectReport.pdf
+archive
+*.zip
+README.html
+README.ipynb
+ResultsTable.txt
+.ipynb_checkpoints
